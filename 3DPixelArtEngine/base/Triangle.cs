@@ -38,18 +38,16 @@ namespace _3DPixelArtEngine
 
         public bool Contains(Line line)
         {
-            return Contains(line.Point1, line.Point2);
-        }
-
-        public bool Contains(Ray ray)
-        {
-            return false;
+            return Contains(new Vector(line.Point1, line.Point2));
         }
 
         public bool Contains(Vector3 point1, Vector3 point2)
         {
+            return Contains(new Vector(point1, point2));
+        }
 
-
+        public bool Contains(Vector vector)
+        {
             List<KeyValuePair<Vector3, Vector3>> sides = new List<KeyValuePair<Vector3, Vector3>>()
             {
                 new KeyValuePair<Vector3, Vector3>(Point1, Point2),
@@ -62,23 +60,16 @@ namespace _3DPixelArtEngine
             {
                 float min = Math.Min(sides[i].Key.Z, sides[i].Value.Z);
                 float max = Math.Min(sides[i].Key.Z, sides[i].Value.Z);
-                if (min <= point1.Z && max >= point1.Z)
+                if (min <= vector.Point.Z && max >= vector.Point.Z)
                 {
                     float slope = (sides[i].Key.X - sides[i].Value.X) / (sides[i].Key.Z - sides[i].Value.Z);
-                    if (min + (slope * (point1.Z - min)) < point1.X)
+                    if (min + (slope * (vector.Point.Z - min)) < vector.Point.X)
                     {
                         amount++;
                     }
                 }
             }
             return amount % 2 == 1;
-        }
-
-        private bool IntersectsPlane(Vector3 plane1, Vector3 plane2, Vector3 plane3, Vector3 line1, Vector3 line2)
-        {
-            Vector2 slopes = new Vector2((plane1 - plane2).Y / (plane1 - plane2).X, (plane1 - plane2).Z / (plane1 - plane2).X);
-            
-            return false;
         }
     }
 }

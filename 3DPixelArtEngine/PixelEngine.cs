@@ -16,7 +16,7 @@ namespace _3DPixelArtEngine
             _width = width;
             _height = height;
 
-            Camera = new Ray(new Vector3(), new Vector3());
+            Camera = new Ray(new Vector3(), new Vector2());
             FieldOfView = 100f;
 
             
