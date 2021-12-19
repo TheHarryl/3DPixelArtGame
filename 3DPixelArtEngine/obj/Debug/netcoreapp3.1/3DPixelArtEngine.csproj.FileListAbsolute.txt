@@ -1,0 +1,5 @@
+C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.csproj.AssemblyReference.cache
+C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.AssemblyInfoInputs.cache
+C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.AssemblyInfo.cs
+C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.csproj.CoreCompileInputs.cache
