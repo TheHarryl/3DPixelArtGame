@@ -11,13 +11,15 @@ namespace _3DPixelArtEngine
         public Vector3 Point2;
         public Vector3 Point3;
 
+        public Vector3 Center;
+
         public Triangle(Vector3 point1, Vector3 point2, Vector3 point3)
         {
             Point1 = point1;
             Point2 = point2;
             Point3 = point3;
 
-
+            Center = (point1 + point2 + point3) / 3f;
         }
 
         public bool Contains(Triangle triangle)
@@ -70,6 +72,23 @@ namespace _3DPixelArtEngine
                 }
             }
             return amount % 2 == 1;
+        }
+
+        public bool Contains(Ray ray)
+        {
+            // https://stackoverflow.com/questions/42740765/intersection-between-line-and-triangle-in-3d
+
+            Vector3 E1 = Point2 - Point1;
+            Vector3 E2 = Point3 - Point1;
+            Vector3 N = Vector3.Cross(E1, E2);
+            float det = -Vector3.Dot(ray.Direction, N);
+            float invdet = 1f / det;
+            Vector3 AO = ray.Point - Point1;
+            Vector3 DAO = Vector3.Cross(AO, ray.Direction);
+            float u = Vector3.Dot(E2, DAO) * invdet;
+            float v = -Vector3.Dot(E1, DAO) * invdet;
+            float t = Vector3.Dot(AO, N) * invdet;
+            return (det >= 1e-6 && t >= 0f && u >= 0f && v >= 0f && (u + v) <= 1f);
         }
     }
 }

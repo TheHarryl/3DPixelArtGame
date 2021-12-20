@@ -8,12 +8,12 @@ namespace _3DPixelArtEngine
     public class Ray
     {
         public Vector3 Point;
-        public Vector2 Rotation;
+        public Vector3 Direction;
 
-        public Ray(Vector3 point, Vector2 rotation)
+        public Ray(Vector3 point, Vector3 direction)
         {
             Point = point;
-            Rotation = rotation;
+            Direction = direction;
         }
     }
 }

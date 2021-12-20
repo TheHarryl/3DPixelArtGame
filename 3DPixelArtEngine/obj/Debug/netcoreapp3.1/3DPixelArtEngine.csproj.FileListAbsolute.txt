@@ -3,3 +3,8 @@ C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3
 C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.AssemblyInfoInputs.cache
 C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.AssemblyInfo.cs
 C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.csproj.CoreCompileInputs.cache
+C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtEngine\bin\Debug\netcoreapp3.1\3DPixelArtEngine.deps.json
+C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtEngine\bin\Debug\netcoreapp3.1\3DPixelArtEngine.dll
+C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtEngine\bin\Debug\netcoreapp3.1\3DPixelArtEngine.pdb
+C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.dll
+C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.pdb
