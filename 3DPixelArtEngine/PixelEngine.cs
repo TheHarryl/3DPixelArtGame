@@ -33,7 +33,7 @@ namespace _3DPixelArtEngine
             _width = width;
             _height = height;
 
-            Camera = new Ray(new Vector3(0f, 0f, 0f), new Vector3(-1f, 0f, 0f));
+            Camera = new Ray(new Vector3(-10f, 0f, 0f), new Vector3(1f, 0f, 0f));
             _pixelize = pixelize;
             _cameraSize = cameraSize;
         }

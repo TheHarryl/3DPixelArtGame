@@ -28,7 +28,7 @@ namespace _3DPixelArtGame
 
             _pixelEngine.Scene.Add(new Mesh(new List<Triangle>()
             {
-                new Triangle(new Vector3(1f, 1f, 0f), new Vector3(1f, 0f, 1f), new Vector3(1f, 0f, -1f))
+                new Triangle(new Vector3(0f, 2f, 0f), new Vector3(0f, -2f, -5f), new Vector3(0f, -2f, 5f))
             }));
 
             base.Initialize();
