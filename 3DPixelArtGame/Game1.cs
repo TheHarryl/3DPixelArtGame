@@ -24,7 +24,7 @@ namespace _3DPixelArtGame
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            _pixelEngine = new PixelEngine(_graphics.GraphicsDevice, 800, 480, 3, 0.05f);
+            _pixelEngine = new PixelEngine(_graphics.GraphicsDevice, 800, 480);
 
             _pixelEngine.Scene.Add(new Mesh(new List<Triangle>()
             {
