@@ -23,3 +23,4 @@ C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtGame\obj\Debug\netcoreapp3.1\3DP
 C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtGame\obj\Debug\netcoreapp3.1\3DPixelArtGame.genruntimeconfig.cache
 C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtGame\bin\Debug\netcoreapp3.1\3DPixelArtEngine.dll
 C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtGame\bin\Debug\netcoreapp3.1\3DPixelArtEngine.pdb
+C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtGame\obj\Debug\netcoreapp3.1\3DPixelArtGame.csproj.CopyComplete

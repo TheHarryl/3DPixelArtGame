@@ -66,11 +66,11 @@ namespace _3DPixelArtEngine
             Vector2 cameraLateralDirection = Vector2.Normalize(new Vector2(Camera.Direction.X, Camera.Direction.Z));
 
             if (state.IsKeyDown(Keys.Right))
-                cameraLateralDirection = Vector2.Normalize(cameraLateralDirection * 180f + new Vector2(45f, -45f));
+                Camera.Rotate(new Vector3(0f, 1f, 0f));
             if (state.IsKeyDown(Keys.Left))
-                cameraLateralDirection = Vector2.Normalize(cameraLateralDirection * 180f - new Vector2(45f, -45f));
+                Camera.Rotate(new Vector3(0f, -1f, 0f));
 
-            Camera.Direction = new Vector3(cameraLateralDirection.X * amount, Camera.Direction.Y, cameraLateralDirection.Y * amount);
+            //Camera.Direction = new Vector3(cameraLateralDirection.X * amount, Camera.Direction.Y, cameraLateralDirection.Y * amount);
 
             System.Diagnostics.Debug.WriteLine(Camera.Direction);
         }
@@ -80,6 +80,9 @@ namespace _3DPixelArtEngine
             Vector3 cameraStart = Camera.Point - new Vector3(0f, _height * _cameraSize / 2f, _width * _cameraSize / 2f);
             int xMax = (int)Math.Ceiling((float)_width / _pixelize);
             int yMax = (int)Math.Ceiling((float)_height / _pixelize);
+
+            spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X, (int)offset.Y, xMax * _pixelize, yMax * _pixelize), new Color(40, 40, 40));
+
             for (int y = 0; y < yMax; y++)
             {
                 for (int x = 0; x < xMax; x++)
@@ -92,7 +95,7 @@ namespace _3DPixelArtEngine
                             Ray pixelRay = new Ray(cameraStart + new Vector3(0f, y * _cameraSize * _pixelize, x * _cameraSize * _pixelize), Camera.Direction);
                             if (triangle.Contains(pixelRay))
                             {
-                                spriteBatch.Draw(_rectangle, new Rectangle((xMax - x) * _pixelize, (yMax - y) * _pixelize, _pixelize, _pixelize), Color.White);
+                                spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X + (xMax - x) * _pixelize, (int)offset.Y + (yMax - y) * _pixelize, _pixelize, _pixelize), Color.White);
                             }
                         }
                     }
