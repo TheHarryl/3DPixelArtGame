@@ -37,7 +37,7 @@ namespace _3DPixelArtEngine
             Direction.Z = -Direction.X * (float)Math.Sin(rotation.Y) + Direction.Z * (float)Math.Cos(rotation.Y);
 
             Direction.X = Direction.X * (float)Math.Cos(rotation.Z) - Direction.Y * (float)Math.Sin(rotation.Z);
-            Direction.Y = Direction.Y * (float)Math.Sin(rotation.Z) + Direction.Y * (float)Math.Cos(rotation.Z);
+            Direction.Y = Direction.X * (float)Math.Sin(rotation.Z) + Direction.Y * (float)Math.Cos(rotation.Z);
         }
 
         public void MoveTo(Vector3 position, float distance = 0f)
