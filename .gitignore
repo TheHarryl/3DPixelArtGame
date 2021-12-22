@@ -7,7 +7,6 @@
 *.editorconfig
 *.CopyComplete
 *.cache
-*.csproj
 *.dylib
 *.1
 *.dylib
