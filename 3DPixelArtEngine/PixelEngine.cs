@@ -14,7 +14,7 @@ namespace _3DPixelArtEngine
         private int _width;
         private int _height;
 
-        public Ray Camera;
+        public Camera Camera;
         public bool CameraLocked;
         private int _pixelize;
         private float _cameraSize;
@@ -29,7 +29,7 @@ namespace _3DPixelArtEngine
         {
             _rectangle = new Texture2D(graphicsDevice, 1, 1);
             Color[] data = new Color[1];
-            data[0] = Color.White;
+            data[0] = Color.Blue;
             _rectangle.SetData(data);
 
             Scene = new List<Mesh>();
@@ -37,7 +37,7 @@ namespace _3DPixelArtEngine
             _width = width;
             _height = height;
 
-            Camera = new Ray(new Vector3(-10f, 0f, 0f), new Vector3(1f, 0f, 0f));
+            Camera = new Camera(new Vector3(-10f, 0f, 0f));
             CameraLocked = false;
             _pixelize = pixelize;
             _cameraSize = cameraSize;
@@ -62,22 +62,44 @@ namespace _3DPixelArtEngine
 
             KeyboardState state = Keyboard.GetState();
 
-            float amount = Vector2.Distance(new Vector2(), new Vector2(Camera.Direction.X, Camera.Direction.Z));
-            Vector2 cameraLateralDirection = Vector2.Normalize(new Vector2(Camera.Direction.X, Camera.Direction.Z));
+            float amount = Vector2.Distance(new Vector2(), new Vector2(Camera.Axes[0].Direction.X, Camera.Axes[0].Direction.Z));
+            Vector2 cameraLateralDirection = Vector2.Normalize(new Vector2(Camera.Axes[0].Direction.X, Camera.Axes[0].Direction.Z));
 
+            if (state.IsKeyDown(Keys.Up))
+                Camera.Rotate(new Vector3(0f, 0f, 1f));
+            if (state.IsKeyDown(Keys.Down))
+                Camera.Rotate(new Vector3(0f, 0f, -1f));
             if (state.IsKeyDown(Keys.Right))
                 Camera.Rotate(new Vector3(0f, 1f, 0f));
             if (state.IsKeyDown(Keys.Left))
                 Camera.Rotate(new Vector3(0f, -1f, 0f));
+            if (state.IsKeyDown(Keys.PageUp))
+                Camera.Rotate(new Vector3(1f, 0f, 0f));
+            if (state.IsKeyDown(Keys.PageDown))
+                Camera.Rotate(new Vector3(-1f, 0f, 0f));
+
+            if (state.IsKeyDown(Keys.W))
+                Camera.TranslateLocal(new Vector3(1f, 0f, 0f));
+            if (state.IsKeyDown(Keys.S))
+                Camera.TranslateLocal(new Vector3(-1f, 0f, 0f));
+            if (state.IsKeyDown(Keys.A))
+                Camera.TranslateLocal(new Vector3(0f, 0f, 1f));
+            if (state.IsKeyDown(Keys.D))
+                Camera.TranslateLocal(new Vector3(0f, 0f, -1f));
+            if (state.IsKeyDown(Keys.E))
+                Camera.TranslateLocal(new Vector3(0f, 1f, 0f));
+            if (state.IsKeyDown(Keys.Q))
+                Camera.TranslateLocal(new Vector3(0f, -1f, 0f));
 
             //Camera.Direction = new Vector3(cameraLateralDirection.X * amount, Camera.Direction.Y, cameraLateralDirection.Y * amount);
 
-            System.Diagnostics.Debug.WriteLine(Camera.Direction);
+            System.Diagnostics.Debug.WriteLine(Camera.Axes[0].Direction);
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 offset = new Vector2())
         {
-            Vector3 cameraStart = Camera.Point - new Vector3(0f, _height * _cameraSize / 2f, _width * _cameraSize / 2f);
+            //0f for parallel projection, 1f for perspective
+            Vector3 cameraStart = Camera.Point - ((Camera.Axes[0].Direction * 0f) + (Camera.Axes[1].Direction * _height * _cameraSize / 2f) + (Camera.Axes[2].Direction * _width * _cameraSize / 2f)); //new Vector3(0f, _height * _cameraSize / 2f, _width * _cameraSize / 2f);
             int xMax = (int)Math.Ceiling((float)_width / _pixelize);
             int yMax = (int)Math.Ceiling((float)_height / _pixelize);
 
@@ -92,7 +114,8 @@ namespace _3DPixelArtEngine
                         for (int v = 0; v < Scene[i].Triangles.Count; v++)
                         {
                             Triangle triangle = Scene[i].Triangles[v];
-                            Ray pixelRay = new Ray(cameraStart + new Vector3(0f, y * _cameraSize * _pixelize, x * _cameraSize * _pixelize), Camera.Direction);
+                            //Ray pixelRay = new Ray(cam.Point, Vector3.Normalize(cameraStart + (cam.Axes[0].Direction * 0f) + (cam.Axes[1].Direction * y * _cameraSize * _pixelize) + (cam.Axes[2].Direction * x * _cameraSize * _pixelize) - cam.Point));
+                            Ray pixelRay = new Ray(cameraStart + (Camera.Axes[0].Direction * 0f) + (Camera.Axes[1].Direction * y * _cameraSize * _pixelize) + (Camera.Axes[2].Direction * x * _cameraSize * _pixelize), Camera.Axes[0].Direction); //new Vector3(0f, y * _cameraSize * _pixelize, x * _cameraSize * _pixelize), Camera.Direction);
                             if (triangle.Contains(pixelRay))
                             {
                                 spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X + (xMax - x) * _pixelize, (int)offset.Y + (yMax - y) * _pixelize, _pixelize, _pixelize), Color.White);
