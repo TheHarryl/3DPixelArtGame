@@ -20,10 +20,9 @@ namespace _3DPixelArtEngine
         private int _pixelize;
         private float _cameraSize;
 
-        private Texture2D _rectangle;
-
         public List<Object> Scene;
 
+        private Texture2D _rectangle;
         private MouseState _lastMouseState;
 
         public PixelEngine(GraphicsDevice graphicsDevice, int width, int height, int pixelize = 3, float cameraSize = 0.1f)
@@ -52,11 +51,15 @@ namespace _3DPixelArtEngine
             List<Triangle> triangles = new List<Triangle>();
 
             var lines = File.ReadLines(fileLocation);
-            foreach (string line in lines) {
-                if (line.StartsWith("v "))
+            if (fileLocation.EndsWith(".obj"))
+            {
+                foreach (string line in lines)
                 {
-                    string[] args = line.Split(" ");
-                    vertices.Add(new Vector3(float.Parse(args[1]), float.Parse(args[2]), float.Parse(args[3])));
+                    if (line.StartsWith("v "))
+                    {
+                        string[] args = line.Split(" ");
+                        vertices.Add(new Vector3(float.Parse(args[1]), float.Parse(args[2]), float.Parse(args[3])));
+                    }
                 }
             }
 
@@ -72,6 +75,8 @@ namespace _3DPixelArtEngine
                 Vector2 difference = new Vector2(mouseState.X - _lastMouseState.X, mouseState.Y - _lastMouseState.Y);
                 Camera.TranslateLocal(new Vector3(0f, difference.Y / 10f, difference.X / 10f));
             }
+
+            Scene[0].Rotation += new Vector3(0f, 50f, 50f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             _lastMouseState = mouseState;
 
@@ -102,8 +107,6 @@ namespace _3DPixelArtEngine
                 Camera.TranslateLocal(new Vector3(0f, 1f, 0f));
             if (state.IsKeyDown(Keys.Q))
                 Camera.TranslateLocal(new Vector3(0f, -1f, 0f));
-
-            System.Diagnostics.Debug.WriteLine(Camera.Direction);
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 offset = new Vector2())
@@ -164,6 +167,15 @@ namespace _3DPixelArtEngine
                     }
                 }
             }
+        }
+
+        private void DrawLine(SpriteBatch spriteBatch, Vector2 begin, Vector2 end, Color color, int width = 1)
+        {
+            Rectangle r = new Rectangle((int)begin.X, (int)begin.Y, (int)(end - begin).Length() + width, width);
+            Vector2 v = Vector2.Normalize(begin - end);
+            float angle = (float)Math.Acos(Vector2.Dot(v, -Vector2.UnitX));
+            if (begin.Y > end.Y) angle = MathHelper.TwoPi - angle;
+            spriteBatch.Draw(_rectangle, r, null, color, angle, Microsoft.Xna.Framework.Vector2.Zero, SpriteEffects.None, 0);
         }
     }
 }

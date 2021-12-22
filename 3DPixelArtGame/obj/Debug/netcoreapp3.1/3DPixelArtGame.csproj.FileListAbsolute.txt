@@ -49,4 +49,3 @@ C:\Users\rebek\Source\Repos\3DPixelArtGame\3DPixelArtGame\obj\Debug\netcoreapp3.
 C:\Users\rebek\Source\Repos\3DPixelArtGame\3DPixelArtGame\obj\Debug\netcoreapp3.1\3DPixelArtGame.csproj.CoreCompileInputs.cache
 C:\Users\rebek\Source\Repos\3DPixelArtGame\3DPixelArtGame\obj\Debug\netcoreapp3.1\3DPixelArtGame.csproj.CopyComplete
 C:\Users\rebek\Source\Repos\3DPixelArtGame\3DPixelArtGame\obj\Debug\netcoreapp3.1\3DPixelArtGame.genruntimeconfig.cache
-C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtGame\obj\Debug\netcoreapp3.1\3DPixelArtGame.csproj.CopyComplete
