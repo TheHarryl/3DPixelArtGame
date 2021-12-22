@@ -58,7 +58,7 @@ namespace _3DPixelArtEngine
         {
             MouseState mouseState = Mouse.GetState();
 
-            if (_lastMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Pressed)
+            if (_lastMouseState.RightButton == ButtonState.Pressed && mouseState.RightButton == ButtonState.Pressed)
             {
                 Vector2 difference = new Vector2(mouseState.X - _lastMouseState.X, mouseState.Y - _lastMouseState.Y);
                 Camera.Rotate(new Vector3(0f, difference.X / -30f, 0f));
