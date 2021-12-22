@@ -9,7 +9,7 @@ namespace _3DPixelArtEngine
     {
         public float Length;
 
-        public Vector(Vector3 point, Vector3 rotation, float length) : base(point, rotation)
+        public Vector(Vector3 origin, Vector3 rotation, float length) : base(origin, rotation)
         {
             Length = length;
         }

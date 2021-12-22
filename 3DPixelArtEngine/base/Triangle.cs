@@ -62,10 +62,10 @@ namespace _3DPixelArtEngine
             {
                 float min = Math.Min(sides[i].Key.Z, sides[i].Value.Z);
                 float max = Math.Min(sides[i].Key.Z, sides[i].Value.Z);
-                if (min <= vector.Point.Z && max >= vector.Point.Z)
+                if (min <= vector.Origin.Z && max >= vector.Origin.Z)
                 {
                     float slope = (sides[i].Key.X - sides[i].Value.X) / (sides[i].Key.Z - sides[i].Value.Z);
-                    if (min + (slope * (vector.Point.Z - min)) < vector.Point.X)
+                    if (min + (slope * (vector.Origin.Z - min)) < vector.Origin.X)
                     {
                         amount++;
                     }
@@ -83,12 +83,22 @@ namespace _3DPixelArtEngine
             Vector3 N = Vector3.Cross(E1, E2);
             float det = -Vector3.Dot(ray.Direction, N);
             float invdet = 1f / det;
-            Vector3 AO = ray.Point - Point1;
+            Vector3 AO = ray.Origin - Point1;
             Vector3 DAO = Vector3.Cross(AO, ray.Direction);
             float u = Vector3.Dot(E2, DAO) * invdet;
             float v = -Vector3.Dot(E1, DAO) * invdet;
             float t = Vector3.Dot(AO, N) * invdet;
             return (det >= 1e-6 && t >= 0f && u >= 0f && v >= 0f && (u + v) <= 1f);
+        }
+
+        public Vector3 GetIntersection(Ray ray)
+        {
+            // https://stackoverflow.com/questions/42740765/intersection-between-line-and-triangle-in-3d
+
+            Vector3 N = Vector3.Cross(Point2 - Point1, Point3 - Point1);
+            float t = -Vector3.Dot(ray.Origin - Point1, N) / Vector3.Dot(ray.Direction * 100f, N);
+
+            return ray.Origin + t * (ray.Direction * 100f);
         }
     }
 }

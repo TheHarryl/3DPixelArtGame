@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = System.Numerics.Vector3;
@@ -14,7 +15,7 @@ namespace _3DPixelArtEngine
         private int _width;
         private int _height;
 
-        public Camera Camera;
+        public Ray3 Camera;
         public bool CameraLocked;
         private int _pixelize;
         private float _cameraSize;
@@ -29,7 +30,7 @@ namespace _3DPixelArtEngine
         {
             _rectangle = new Texture2D(graphicsDevice, 1, 1);
             Color[] data = new Color[1];
-            data[0] = Color.Blue;
+            data[0] = Color.White;
             _rectangle.SetData(data);
 
             Scene = new List<Object>();
@@ -37,7 +38,7 @@ namespace _3DPixelArtEngine
             _width = width;
             _height = height;
 
-            Camera = new Camera(new Vector3(-10f, 0f, 0f));
+            Camera = new Ray3(new Vector3(-10f, 0f, 0f));
             CameraLocked = false;
             _pixelize = pixelize;
             _cameraSize = cameraSize;
@@ -47,9 +48,17 @@ namespace _3DPixelArtEngine
 
         public List<Triangle> ImportMesh(string fileLocation)
         {
+            List<Vector3> vertices = new List<Vector3>();
             List<Triangle> triangles = new List<Triangle>();
 
-            
+            var lines = File.ReadLines(fileLocation);
+            foreach (string line in lines) {
+                if (line.StartsWith("v "))
+                {
+                    string[] args = line.Split(" ");
+                    vertices.Add(new Vector3(float.Parse(args[1]), float.Parse(args[2]), float.Parse(args[3])));
+                }
+            }
 
             return triangles;
         }
@@ -61,15 +70,12 @@ namespace _3DPixelArtEngine
             if (_lastMouseState.RightButton == ButtonState.Pressed && mouseState.RightButton == ButtonState.Pressed)
             {
                 Vector2 difference = new Vector2(mouseState.X - _lastMouseState.X, mouseState.Y - _lastMouseState.Y);
-                Camera.Rotate(new Vector3(0f, difference.X / -30f, 0f));
+                Camera.TranslateLocal(new Vector3(0f, difference.Y / 10f, difference.X / 10f));
             }
 
             _lastMouseState = mouseState;
 
             KeyboardState state = Keyboard.GetState();
-
-            float amount = Vector2.Distance(new Vector2(), new Vector2(Camera.Axes[0].Direction.X, Camera.Axes[0].Direction.Z));
-            Vector2 cameraLateralDirection = Vector2.Normalize(new Vector2(Camera.Axes[0].Direction.X, Camera.Axes[0].Direction.Z));
 
             if (state.IsKeyDown(Keys.Up))
                 Camera.Rotate(new Vector3(0f, 0f, 1f));
@@ -97,15 +103,12 @@ namespace _3DPixelArtEngine
             if (state.IsKeyDown(Keys.Q))
                 Camera.TranslateLocal(new Vector3(0f, -1f, 0f));
 
-            //Camera.Direction = new Vector3(cameraLateralDirection.X * amount, Camera.Direction.Y, cameraLateralDirection.Y * amount);
-
-            System.Diagnostics.Debug.WriteLine(Camera.Axes[0].Direction);
+            System.Diagnostics.Debug.WriteLine(Camera.Direction);
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 offset = new Vector2())
         {
-            //0f for parallel projection, 1f for perspective
-            Vector3 cameraStart = Camera.Point - ((Camera.Axes[0].Direction * 0f) + (Camera.Axes[1].Direction * _height * _cameraSize / 2f) + (Camera.Axes[2].Direction * _width * _cameraSize / 2f)); //new Vector3(0f, _height * _cameraSize / 2f, _width * _cameraSize / 2f);
+            Vector3 cameraStart = Camera.Origin - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
             int xMax = (int)Math.Ceiling((float)_width / _pixelize);
             int yMax = (int)Math.Ceiling((float)_height / _pixelize);
 
@@ -120,35 +123,17 @@ namespace _3DPixelArtEngine
                         for (int v = 0; v < Scene[i].Triangles.Count; v++)
                         {
                             Triangle triangle = Scene[i].Triangles[v];
-                            //Ray pixelRay = new Ray(cam.Point, Vector3.Normalize(cameraStart + (cam.Axes[0].Direction * 0f) + (cam.Axes[1].Direction * y * _cameraSize * _pixelize) + (cam.Axes[2].Direction * x * _cameraSize * _pixelize) - cam.Point));
-                            Ray pixelRay = new Ray(cameraStart + (Camera.Axes[0].Direction * 0f) + (Camera.Axes[1].Direction * y * _cameraSize * _pixelize) + (Camera.Axes[2].Direction * x * _cameraSize * _pixelize), Camera.Axes[0].Direction); //new Vector3(0f, y * _cameraSize * _pixelize, x * _cameraSize * _pixelize), Camera.Direction);
+                            Vector3 cameraOrigin = cameraStart + (Camera.LongitudinalAxis.Direction * y * _cameraSize * _pixelize) + (Camera.LateralAxis.Direction * x * _cameraSize * _pixelize);
+                            Ray pixelRay = new Ray(cameraOrigin, Camera.Direction);
                             if (triangle.Contains(pixelRay))
                             {
-                                spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X + (xMax - x) * _pixelize, (int)offset.Y + (yMax - y) * _pixelize, _pixelize, _pixelize), Color.White);
+                                //float darken = Vector3.Distance(cameraOrigin, triangle.GetIntersection(pixelRay)) / 20f;
+                                spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X + (xMax - x - 1) * _pixelize, (int)offset.Y + (yMax - y - 1) * _pixelize, _pixelize, _pixelize), Color.White);
                             }
                         }
                     }
                 }
             }
-
-            /*for (int y = 0; y < Math.Ceiling((float)_height / _pixelize); y++)
-            {
-                for (int x = 0; x < Math.Ceiling((float)_width / _pixelize); x++)
-                {
-                    for (int i = 0; i < Scene.Count; i++)
-                    {
-                        for (int v = 0; v < Scene[i].Triangles.Count; v++)
-                        {
-                            Triangle triangle = Scene[i].Triangles[v];
-                            Ray pixelRay = new Ray(Camera.Point, new Vector3(-45f + 90f * (x / (float)Math.Ceiling((float)_width / _pixelize)), 0, -45f + 90f * (y / (float)Math.Ceiling((float)_height / _pixelize))));
-                            if (triangle.Contains(pixelRay))
-                            {
-                                spriteBatch.Draw(_rectangle, new Rectangle(x * _pixelize, y * _pixelize, _pixelize, _pixelize), Color.White);
-                            }
-                        }
-                    }
-                }
-            }*/
         }
     }
 }

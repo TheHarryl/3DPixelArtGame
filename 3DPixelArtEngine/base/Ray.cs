@@ -7,26 +7,16 @@ namespace _3DPixelArtEngine
 {
     public class Ray
     {
-        public Vector3 Point;
+        public Vector3 Origin;
         public Vector3 Direction;
 
-        public Ray(Vector3 point, Vector3 direction)
+        public Ray(Vector3 origin, Vector3 direction)
         {
-            Point = point;
+            Origin = origin;
             Direction = direction;
         }
 
-        /*public void RotateLateral(float deg)
-        {
-            float lateralCoefficient = Vector2.Distance(Vector2.Zero, new Vector2(Direction.X, Direction.Z));
-            Vector2 lateralDirection = Vector2.Normalize(new Vector2(Direction.X, Direction.Z));
-            float degrees = (float)Math.Acos(lateralDirection.X) + deg;
-            Vector2 newDirection = new Vector2((float)Math.Cos(degrees), (float)Math.Sin(degrees));
-            Direction.X = newDirection.X * lateralCoefficient;
-            Direction.Z = newDirection.Y * lateralCoefficient;
-        }*/
-
-        public void Rotate(Vector3 rotation)
+        public virtual void Rotate(Vector3 rotation)
         {
             rotation *= (float)Math.PI / 180f;
 
@@ -40,19 +30,24 @@ namespace _3DPixelArtEngine
             Direction.Y = Direction.X * (float)Math.Sin(rotation.Z) + Direction.Y * (float)Math.Cos(rotation.Z);
         }
 
+        public virtual void Translate(Vector3 translation)
+        {
+            Origin += translation;
+        }
+
         public void MoveTo(Vector3 position, float distance = 0f)
         {
-            Point = position - Direction * distance;
+            Origin = position - Direction * distance;
         }
 
         public void RotateTo(Vector3 position)
         {
-            Direction = Vector3.Normalize(position - Point);
+            Direction = Vector3.Normalize(position - Origin);
         }
 
         public Ray Clone()
         {
-            return new Ray(Point, Direction);
+            return new Ray(Origin, Direction);
         }
     }
 }
