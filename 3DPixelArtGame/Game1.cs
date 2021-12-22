@@ -59,7 +59,7 @@ namespace _3DPixelArtGame
             _spriteBatch.Begin();
 
             // TODO: Add your drawing code here
-            _pixelEngine.DrawPerspective(_spriteBatch, 120);
+            _pixelEngine.Draw(_spriteBatch);
 
             base.Draw(gameTime);
 

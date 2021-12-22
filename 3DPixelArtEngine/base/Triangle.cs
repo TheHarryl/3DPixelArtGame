@@ -100,5 +100,13 @@ namespace _3DPixelArtEngine
 
             return ray.Origin + t * (ray.Direction * 100f);
         }
+
+        public Ray GetReflection(Ray ray)
+        {
+            Vector3 N = Vector3.Cross(Point2 - Point1, Point3 - Point1);
+            Vector3 intersection = this.GetIntersection(ray);
+            Vector3 direction = ray.Direction - (2f * Vector3.Dot(ray.Direction, N) * N);
+            return new Ray(intersection, direction);
+        }
     }
 }
