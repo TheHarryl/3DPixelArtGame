@@ -96,9 +96,9 @@ namespace _3DPixelArtEngine
             // https://stackoverflow.com/questions/42740765/intersection-between-line-and-triangle-in-3d
 
             Vector3 N = Vector3.Cross(Point2 - Point1, Point3 - Point1);
-            float t = -Vector3.Dot(ray.Origin - Point1, N) / Vector3.Dot(ray.Direction * 100f, N);
+            float t = -Vector3.Dot(ray.Origin - Point1, N) / Vector3.Dot(ray.Direction * 1000f, N);
 
-            return ray.Origin + t * (ray.Direction * 100f);
+            return ray.Origin + t * (ray.Direction * 1000f);
         }
 
         public Ray GetReflection(Ray ray)

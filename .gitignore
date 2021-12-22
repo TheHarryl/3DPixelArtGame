@@ -1,0 +1,9 @@
+
+*.dll
+.vs/3DPixelArtGame/v16/.suo
+3DPixelArtEngine/base/Object.cs
+*.exe
+*.pdb
+*.editorconfig
+*.CopyComplete
+*.cache

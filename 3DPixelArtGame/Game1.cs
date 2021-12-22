@@ -26,10 +26,13 @@ namespace _3DPixelArtGame
             // TODO: Add your initialization logic here
             _pixelEngine = new PixelEngine(_graphics.GraphicsDevice, 800, 480);
 
-            _pixelEngine.Scene.Add(new Object(new List<Triangle>()
+            Object testObject = new Object();
+            testObject.Mesh = new List<Triangle>()
             {
                 new Triangle(new Vector3(0f, 2f, 0f), new Vector3(3f, -2f, -2f), new Vector3(0f, -2f, 5f))
-            }));
+            };
+
+            _pixelEngine.Scene.Add(testObject);
 
             base.Initialize();
         }
