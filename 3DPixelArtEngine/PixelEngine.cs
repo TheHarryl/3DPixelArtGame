@@ -21,7 +21,7 @@ namespace _3DPixelArtEngine
 
         private Texture2D _rectangle;
 
-        public List<Mesh> Scene;
+        public List<Object> Scene;
 
         private MouseState _lastMouseState;
 
@@ -32,7 +32,7 @@ namespace _3DPixelArtEngine
             data[0] = Color.Blue;
             _rectangle.SetData(data);
 
-            Scene = new List<Mesh>();
+            Scene = new List<Object>();
 
             _width = width;
             _height = height;
@@ -45,20 +45,26 @@ namespace _3DPixelArtEngine
             _lastMouseState = Mouse.GetState();
         }
 
+        public List<Triangle> ImportMesh(string fileLocation)
+        {
+            List<Triangle> triangles = new List<Triangle>();
+
+            
+
+            return triangles;
+        }
+
         public void Update(GameTime gameTime)
         {
-            /*MouseState mouseState = Mouse.GetState();
+            MouseState mouseState = Mouse.GetState();
 
-            if (_lastMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Pressed)
+            if (_lastMouseState.RightButton == ButtonState.Pressed && mouseState.RightButton == ButtonState.Pressed)
             {
                 Vector2 difference = new Vector2(mouseState.X - _lastMouseState.X, mouseState.Y - _lastMouseState.Y);
-                float amount = Vector2.Distance(new Vector2(), new Vector2(Camera.Direction.X, Camera.Direction.Z));
-                Vector2 cameraLateralDirection = Vector2.Normalize(new Vector2(Camera.Direction.X, Camera.Direction.Z));
-                cameraLateralDirection = Vector2.Normalize(cameraLateralDirection * 180f + difference) * amount;
-                Camera.Direction = new Vector3(cameraLateralDirection.X, Camera.Direction.Y, cameraLateralDirection.Y);
+                Camera.Rotate(new Vector3(0f, difference.X / -30f, 0f));
             }
 
-            _lastMouseState = mouseState;*/
+            _lastMouseState = mouseState;
 
             KeyboardState state = Keyboard.GetState();
 
