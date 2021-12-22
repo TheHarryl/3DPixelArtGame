@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "HcFP8F3NQyTcgD3H2yPQ7nv5TzJT6ON+S/Ey3wN3AU44ESsPb+wyb7guATJIBIm8msO51TbWy1t2PtQPLU2Wdg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\harry\\Desktop\\3DPixelArtGame\\3DPixelArtEngine\\3DPixelArtEngine.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\harry\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.0.1641\\monogame.framework.desktopgl.3.8.0.1641.nupkg.sha512"
+  ],
+  "logs": []
+}
