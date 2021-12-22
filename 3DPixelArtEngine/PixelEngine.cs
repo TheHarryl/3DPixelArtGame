@@ -21,7 +21,7 @@ namespace _3DPixelArtEngine
 
         private Texture2D _rectangle;
 
-        public List<Mesh> Scene;
+        public List<Object> Scene;
 
         private MouseState _lastMouseState;
 
@@ -32,7 +32,7 @@ namespace _3DPixelArtEngine
             data[0] = Color.White;
             _rectangle.SetData(data);
 
-            Scene = new List<Mesh>();
+            Scene = new List<Object>();
 
             _width = width;
             _height = height;
@@ -45,20 +45,26 @@ namespace _3DPixelArtEngine
             _lastMouseState = Mouse.GetState();
         }
 
+        public List<Triangle> ImportMesh(string fileLocation)
+        {
+            List<Triangle> triangles = new List<Triangle>();
+
+            
+
+            return triangles;
+        }
+
         public void Update(GameTime gameTime)
         {
-            /*MouseState mouseState = Mouse.GetState();
+            MouseState mouseState = Mouse.GetState();
 
             if (_lastMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Pressed)
             {
                 Vector2 difference = new Vector2(mouseState.X - _lastMouseState.X, mouseState.Y - _lastMouseState.Y);
-                float amount = Vector2.Distance(new Vector2(), new Vector2(Camera.Direction.X, Camera.Direction.Z));
-                Vector2 cameraLateralDirection = Vector2.Normalize(new Vector2(Camera.Direction.X, Camera.Direction.Z));
-                cameraLateralDirection = Vector2.Normalize(cameraLateralDirection * 180f + difference) * amount;
-                Camera.Direction = new Vector3(cameraLateralDirection.X, Camera.Direction.Y, cameraLateralDirection.Y);
+                Camera.Rotate(new Vector3(0f, difference.X / -30f, 0f));
             }
 
-            _lastMouseState = mouseState;*/
+            _lastMouseState = mouseState;
 
             KeyboardState state = Keyboard.GetState();
 
@@ -69,6 +75,10 @@ namespace _3DPixelArtEngine
                 Camera.Rotate(new Vector3(0f, 1f, 0f));
             if (state.IsKeyDown(Keys.Left))
                 Camera.Rotate(new Vector3(0f, -1f, 0f));
+            if (state.IsKeyDown(Keys.Up))
+                Camera.Rotate(new Vector3(-1f, 0f, -1f));
+            if (state.IsKeyDown(Keys.Down))
+                Camera.Rotate(new Vector3(1f, 0f, 1f));
 
             //Camera.Direction = new Vector3(cameraLateralDirection.X * amount, Camera.Direction.Y, cameraLateralDirection.Y * amount);
 
@@ -77,7 +87,12 @@ namespace _3DPixelArtEngine
 
         public void Draw(SpriteBatch spriteBatch, Vector2 offset = new Vector2())
         {
-            Vector3 cameraStart = Camera.Point - new Vector3(0f, _height * _cameraSize / 2f, _width * _cameraSize / 2f);
+            Ray horizontalRay = Camera.Clone();
+            Ray verticalRay = Camera.Clone();
+            horizontalRay.Rotate(new Vector3(0f, 90f, 0f));
+            verticalRay.Rotate(new Vector3(90f, 0f, 90f));
+
+            Vector3 cameraStart = Camera.Point - new Vector3(_width * _cameraSize / 2f, 0f, _width * _cameraSize / 2f) * horizontalRay.Direction - new Vector3(_height * _cameraSize / 2f) * verticalRay.Direction;
             int xMax = (int)Math.Ceiling((float)_width / _pixelize);
             int yMax = (int)Math.Ceiling((float)_height / _pixelize);
 
@@ -92,7 +107,7 @@ namespace _3DPixelArtEngine
                         for (int v = 0; v < Scene[i].Triangles.Count; v++)
                         {
                             Triangle triangle = Scene[i].Triangles[v];
-                            Ray pixelRay = new Ray(cameraStart + new Vector3(0f, y * _cameraSize * _pixelize, x * _cameraSize * _pixelize), Camera.Direction);
+                            Ray pixelRay = new Ray(cameraStart + new Vector3(x * _cameraSize / 2f, 0f, x * _cameraSize / 2f) * horizontalRay.Direction + new Vector3(y * _cameraSize / 2f) * verticalRay.Direction, Camera.Direction);
                             if (triangle.Contains(pixelRay))
                             {
                                 spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X + (xMax - x) * _pixelize, (int)offset.Y + (yMax - y) * _pixelize, _pixelize, _pixelize), Color.White);

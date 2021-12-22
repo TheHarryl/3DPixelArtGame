@@ -39,5 +39,20 @@ namespace _3DPixelArtEngine
             Direction.X = Direction.X * (float)Math.Cos(rotation.Z) - Direction.Y * (float)Math.Sin(rotation.Z);
             Direction.Y = Direction.Y * (float)Math.Sin(rotation.Z) + Direction.Y * (float)Math.Cos(rotation.Z);
         }
+
+        public void MoveTo(Vector3 position, float distance = 0f)
+        {
+            Point = position - Direction * distance;
+        }
+
+        public void RotateTo(Vector3 position)
+        {
+            Direction = Vector3.Normalize(position - Point);
+        }
+
+        public Ray Clone()
+        {
+            return new Ray(Point, Direction);
+        }
     }
 }
