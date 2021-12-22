@@ -1,24 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\harry\\Desktop\\3DPixelArtGame\\3DPixelArtGame\\3DPixelArtGame.csproj": {}
+    "C:\\Users\\rebek\\source\\repos\\3DPixelArtGame\\3DPixelArtGame\\3DPixelArtGame.csproj": {}
   },
   "projects": {
-    "C:\\Users\\harry\\Desktop\\3DPixelArtGame\\3DPixelArtEngine\\3DPixelArtEngine.csproj": {
+    "C:\\Users\\rebek\\source\\repos\\3DPixelArtGame\\3DPixelArtEngine\\3DPixelArtEngine.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\harry\\Desktop\\3DPixelArtGame\\3DPixelArtEngine\\3DPixelArtEngine.csproj",
+        "projectUniqueName": "C:\\Users\\rebek\\source\\repos\\3DPixelArtGame\\3DPixelArtEngine\\3DPixelArtEngine.csproj",
         "projectName": "3DPixelArtEngine",
-        "projectPath": "C:\\Users\\harry\\Desktop\\3DPixelArtGame\\3DPixelArtEngine\\3DPixelArtEngine.csproj",
-        "packagesPath": "C:\\Users\\harry\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\harry\\Desktop\\3DPixelArtGame\\3DPixelArtEngine\\obj\\",
+        "projectPath": "C:\\Users\\rebek\\source\\repos\\3DPixelArtGame\\3DPixelArtEngine\\3DPixelArtEngine.csproj",
+        "packagesPath": "C:\\Users\\rebek\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\rebek\\source\\repos\\3DPixelArtGame\\3DPixelArtEngine\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
           "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
-          "C:\\Users\\harry\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\rebek\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
@@ -66,25 +66,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.404\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\harry\\Desktop\\3DPixelArtGame\\3DPixelArtGame\\3DPixelArtGame.csproj": {
+    "C:\\Users\\rebek\\source\\repos\\3DPixelArtGame\\3DPixelArtGame\\3DPixelArtGame.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\harry\\Desktop\\3DPixelArtGame\\3DPixelArtGame\\3DPixelArtGame.csproj",
+        "projectUniqueName": "C:\\Users\\rebek\\source\\repos\\3DPixelArtGame\\3DPixelArtGame\\3DPixelArtGame.csproj",
         "projectName": "3DPixelArtGame",
-        "projectPath": "C:\\Users\\harry\\Desktop\\3DPixelArtGame\\3DPixelArtGame\\3DPixelArtGame.csproj",
-        "packagesPath": "C:\\Users\\harry\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\harry\\Desktop\\3DPixelArtGame\\3DPixelArtGame\\obj\\",
+        "projectPath": "C:\\Users\\rebek\\source\\repos\\3DPixelArtGame\\3DPixelArtGame\\3DPixelArtGame.csproj",
+        "packagesPath": "C:\\Users\\rebek\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\rebek\\source\\repos\\3DPixelArtGame\\3DPixelArtGame\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
           "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
-          "C:\\Users\\harry\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\rebek\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
@@ -100,8 +100,8 @@
           "netcoreapp3.1": {
             "targetAlias": "netcoreapp3.1",
             "projectReferences": {
-              "C:\\Users\\harry\\Desktop\\3DPixelArtGame\\3DPixelArtEngine\\3DPixelArtEngine.csproj": {
-                "projectPath": "C:\\Users\\harry\\Desktop\\3DPixelArtGame\\3DPixelArtEngine\\3DPixelArtEngine.csproj"
+              "C:\\Users\\rebek\\source\\repos\\3DPixelArtGame\\3DPixelArtEngine\\3DPixelArtEngine.csproj": {
+                "projectPath": "C:\\Users\\rebek\\source\\repos\\3DPixelArtGame\\3DPixelArtEngine\\3DPixelArtEngine.csproj"
               }
             }
           }
@@ -140,7 +140,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.404\\RuntimeIdentifierGraph.json"
         }
       }
     }

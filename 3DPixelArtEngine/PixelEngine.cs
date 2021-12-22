@@ -135,5 +135,35 @@ namespace _3DPixelArtEngine
                 }
             }
         }
+
+        public void DrawPerspective(SpriteBatch spriteBatch, float fov = 120, Vector2 offset = new Vector2())
+        {
+            _cameraSize = .0025f;
+            Vector3 cameraStart = Camera.Origin + (Camera.Direction * (_width * _cameraSize / 2f) / (float) Math.Tan(fov * Math.PI / 360f)) - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
+            int xMax = (int)Math.Ceiling((float)_width / _pixelize);
+            int yMax = (int)Math.Ceiling((float)_height / _pixelize);
+
+            spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X, (int)offset.Y, xMax * _pixelize, yMax * _pixelize), new Color(40, 40, 40));
+            for (int y = 0; y < yMax; y++)
+            {
+                for (int x = 0; x < xMax; x++)
+                {
+                    for (int i = 0; i < Scene.Count; i++)
+                    {
+                        for (int v = 0; v < Scene[i].Triangles.Count; v++)
+                        {
+                            Triangle triangle = Scene[i].Triangles[v];
+                            Vector3 cameraOrigin = cameraStart + (Camera.LongitudinalAxis.Direction * y * _cameraSize * _pixelize) + (Camera.LateralAxis.Direction * x * _cameraSize * _pixelize);
+                            Ray pixelRay = new Ray(Camera.Origin, Vector3.Normalize(cameraOrigin - Camera.Origin));
+                            if (triangle.Contains(pixelRay))
+                            {
+                                //float darken = Vector3.Distance(cameraOrigin, triangle.GetIntersection(pixelRay)) / 20f;
+                                spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X + (xMax - x - 1) * _pixelize, (int)offset.Y + (yMax - y - 1) * _pixelize, _pixelize, _pixelize), Color.White);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
