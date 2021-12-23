@@ -62,8 +62,6 @@ namespace _3DPixelArtEngine
             _position = position;
             _rotation = rotation;
             _scale = new Vector3(1f, 1f, 1f);
-
-            Light = new PointLight(Color.White, 0f, 0f);
         }
 
         private void TransformMesh()

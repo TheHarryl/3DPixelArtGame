@@ -31,7 +31,7 @@ namespace _3DPixelArtEngine
             LightSpread = lightSpread;
 
             Orientation = new Ray(Vector3.Zero, new Vector3(1f, 0f, 0f));
-            Enabled = false;
+            Enabled = true;
         }
 
         public float GetIntensityAtDistance(float distance)

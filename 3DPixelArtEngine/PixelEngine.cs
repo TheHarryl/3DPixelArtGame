@@ -79,7 +79,7 @@ namespace _3DPixelArtEngine
                 Camera.TranslateLocal(new Vector3(0f, difference.Y / 10f, difference.X / 10f));
             }
 
-            Scene[0].Rotation += new Vector3(0f, 50f, 0f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Scene[1].Rotation += new Vector3(0f, 50f, 0f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             _lastMouseState = mouseState;
 
@@ -134,6 +134,7 @@ namespace _3DPixelArtEngine
                 {
                     for (int i = 0; i < Scene.Count; i++)
                     {
+                        if (Scene[i].Mesh == null) continue;
                         for (int v = 0; v < Scene[i].Mesh.Count; v++)
                         {
                             Triangle triangle = Scene[i].Mesh[v];
@@ -143,11 +144,11 @@ namespace _3DPixelArtEngine
                             {
                                 //float darken = (Vector3.Distance(cameraOrigin, triangle.GetIntersection(pixelRay)) - 5f) / 10f;
                                 Color pixelColor = Color.White;
-                                for (int l = 0; l < Scene.Count; i++)
+                                for (int l = 0; l < Scene.Count; l++)
                                 {
-                                    if (!Scene[i].Light.Enabled || Vector3.Distance(Scene[i].Position, triangle.Center) > Scene[i].Light.OuterRange) continue;
-                                    float intensity = Scene[i].Light.GetIntensityAtDistance(Vector3.Distance(Scene[i].Position, triangle.Center));
-                                    Vector3 angle = triangle.GetReflection(new Ray(Scene[i].Position, triangle.Center)).Direction;
+                                    if (Scene[l].Light == null || !Scene[l].Light.Enabled || Vector3.Distance(Scene[l].Position, triangle.Center) > Scene[l].Light.OuterRange) continue;
+                                    float intensity = Scene[l].Light.GetIntensityAtDistance(Vector3.Distance(Scene[l].Position, triangle.Center));
+                                    Vector3 angle = triangle.GetReflection(new Ray(Scene[l].Position, triangle.Center)).Direction;
 
                                     //pixelColor = Color.Lerp(pixelColor, Scene[i].Light.Color, );
                                 }
