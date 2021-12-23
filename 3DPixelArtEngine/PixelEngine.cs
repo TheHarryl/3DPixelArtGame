@@ -79,7 +79,7 @@ namespace _3DPixelArtEngine
                 Camera.TranslateLocal(new Vector3(0f, difference.Y / 10f, difference.X / 10f));
             }
 
-            Scene[1].Rotation += new Vector3(0f, 50f, 0f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Scene[1].Rotation += new Vector3(0f, 0f, 50f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             _lastMouseState = mouseState;
 
@@ -142,13 +142,12 @@ namespace _3DPixelArtEngine
                             Ray pixelRay = new Ray(cameraOrigin, Camera.Direction);
                             if (triangle.Contains(pixelRay))
                             {
-                                //float darken = (Vector3.Distance(cameraOrigin, triangle.GetIntersection(pixelRay)) - 5f) / 10f;
                                 Color pixelColor = Color.Black;
                                 for (int l = 0; l < Scene.Count; l++)
                                 {
                                     if (Scene[l].Light == null || !Scene[l].Light.Enabled || Vector3.Distance(Scene[l].Position, triangle.Center) > Scene[l].Light.OuterRange) continue;
                                     float intensity = Scene[l].Light.GetIntensityAtDistance(Vector3.Distance(Scene[l].Position, triangle.Center));
-                                    pixelColor = Color.Lerp(pixelColor, Scene[l].Light.Color, intensity * Vector3.Dot(Vector3.Normalize(Scene[l].Position - triangle.Center), triangle.Perpendicular));
+                                    pixelColor = Color.Lerp(pixelColor, Scene[l].Light.Color, intensity * Vector3.Dot(triangle.GetReflection(new Ray(Scene[l].Position, triangle.Center)).Direction, triangle.Perpendicular));
                                 }
                                 spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X + (xMax - x - 1) * _pixelize, (int)offset.Y + (yMax - y - 1) * _pixelize, _pixelize, _pixelize), pixelColor);
                             }
