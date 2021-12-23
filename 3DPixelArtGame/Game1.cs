@@ -29,7 +29,8 @@ namespace _3DPixelArtGame
             Object testObject = new Object();
             testObject.Mesh = new List<Triangle>()
             {
-                new Triangle(new Vector3(0f, 2f, 0f), new Vector3(3f, -2f, -2f), new Vector3(0f, -2f, 5f))
+                new Triangle(new Vector3(0f, 2f, 0f), new Vector3(3f, -2f, -2f), new Vector3(0f, -2f, 5f)),
+                new Triangle(new Vector3(0f, 2f, 0f), new Vector3(0f, -2f, 5f), new Vector3(3f, -2f, -2f))
             };
 
             _pixelEngine.Scene.Add(testObject);
@@ -62,7 +63,7 @@ namespace _3DPixelArtGame
             _spriteBatch.Begin();
 
             // TODO: Add your drawing code here
-            _pixelEngine.DrawPerspective(_spriteBatch);
+            _pixelEngine.Draw(_spriteBatch);
 
             base.Draw(gameTime);
 

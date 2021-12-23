@@ -1,8 +1,10 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
+using Vector3 = System.Numerics.Vector3;
 
 namespace _3DPixelArtEngine
 {
@@ -14,6 +16,9 @@ namespace _3DPixelArtEngine
         private Vector3 _rotation;
         private Vector3 _scale;
 
+        public Texture2D TextureMap;
+        public PointLight Light;
+
         public List<Triangle> Mesh
         {
             get => _transformedMesh;
@@ -23,7 +28,6 @@ namespace _3DPixelArtEngine
                 TransformMesh();
             }
         }
-        public Texture2D TextureMap;
         public Vector3 Position
         {
             get => _position;
@@ -58,6 +62,8 @@ namespace _3DPixelArtEngine
             _position = position;
             _rotation = rotation;
             _scale = new Vector3(1f, 1f, 1f);
+
+            Light = new PointLight(Color.White, 0f, 0f);
         }
 
         private void TransformMesh()

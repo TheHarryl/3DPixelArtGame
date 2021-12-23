@@ -78,15 +78,13 @@ namespace _3DPixelArtEngine
         {
             // https://stackoverflow.com/questions/42740765/intersection-between-line-and-triangle-in-3d
 
-            Vector3 E1 = Point2 - Point1;
-            Vector3 E2 = Point3 - Point1;
-            Vector3 N = Vector3.Cross(E1, E2);
+            Vector3 N = Vector3.Cross(Point2 - Point1, Point3 - Point1);
             float det = -Vector3.Dot(ray.Direction, N);
             float invdet = 1f / det;
             Vector3 AO = ray.Origin - Point1;
             Vector3 DAO = Vector3.Cross(AO, ray.Direction);
-            float u = Vector3.Dot(E2, DAO) * invdet;
-            float v = -Vector3.Dot(E1, DAO) * invdet;
+            float u = Vector3.Dot(Point3 - Point1, DAO) * invdet;
+            float v = -Vector3.Dot(Point2 - Point1, DAO) * invdet;
             float t = Vector3.Dot(AO, N) * invdet;
             return (det >= 1e-6 && t >= 0f && u >= 0f && v >= 0f && (u + v) <= 1f);
         }

@@ -32,7 +32,10 @@ namespace _3DPixelArtEngine
             data[0] = Color.White;
             _rectangle.SetData(data);
 
-            Scene = new List<Object>();
+            Object Sun = new Object(new Vector3(0f, 10000f, 0f));
+            Sun.Light = new PointLight(Color.White, 100000f, 100000f);
+            Sun.Light.Enabled = true;
+            Scene = new List<Object>() { Sun };
 
             _width = width;
             _height = height;
@@ -76,7 +79,7 @@ namespace _3DPixelArtEngine
                 Camera.TranslateLocal(new Vector3(0f, difference.Y / 10f, difference.X / 10f));
             }
 
-            Scene[0].Rotation += new Vector3(0f, 50f, 50f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Scene[0].Rotation += new Vector3(0f, 50f, 0f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             _lastMouseState = mouseState;
 
@@ -138,8 +141,17 @@ namespace _3DPixelArtEngine
                             Ray pixelRay = new Ray(cameraOrigin, Camera.Direction);
                             if (triangle.Contains(pixelRay))
                             {
-                                //float darken = Vector3.Distance(cameraOrigin, triangle.GetIntersection(pixelRay)) / 20f;
-                                spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X + (xMax - x - 1) * _pixelize, (int)offset.Y + (yMax - y - 1) * _pixelize, _pixelize, _pixelize), Color.White);
+                                //float darken = (Vector3.Distance(cameraOrigin, triangle.GetIntersection(pixelRay)) - 5f) / 10f;
+                                Color pixelColor = Color.White;
+                                for (int l = 0; l < Scene.Count; i++)
+                                {
+                                    if (!Scene[i].Light.Enabled || Vector3.Distance(Scene[i].Position, triangle.Center) > Scene[i].Light.OuterRange) continue;
+                                    float intensity = Scene[i].Light.GetIntensityAtDistance(Vector3.Distance(Scene[i].Position, triangle.Center));
+                                    Vector3 angle = triangle.GetReflection(new Ray(Scene[i].Position, triangle.Center)).Direction;
+
+                                    //pixelColor = Color.Lerp(pixelColor, Scene[i].Light.Color, );
+                                }
+                                spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X + (xMax - x - 1) * _pixelize, (int)offset.Y + (yMax - y - 1) * _pixelize, _pixelize, _pixelize), pixelColor);
                             }
                         }
                     }
