@@ -143,14 +143,12 @@ namespace _3DPixelArtEngine
                             if (triangle.Contains(pixelRay))
                             {
                                 //float darken = (Vector3.Distance(cameraOrigin, triangle.GetIntersection(pixelRay)) - 5f) / 10f;
-                                Color pixelColor = Color.White;
+                                Color pixelColor = Color.Black;
                                 for (int l = 0; l < Scene.Count; l++)
                                 {
                                     if (Scene[l].Light == null || !Scene[l].Light.Enabled || Vector3.Distance(Scene[l].Position, triangle.Center) > Scene[l].Light.OuterRange) continue;
                                     float intensity = Scene[l].Light.GetIntensityAtDistance(Vector3.Distance(Scene[l].Position, triangle.Center));
-                                    Vector3 angle = triangle.GetReflection(new Ray(Scene[l].Position, triangle.Center)).Direction;
-
-                                    //pixelColor = Color.Lerp(pixelColor, Scene[i].Light.Color, );
+                                    pixelColor = Color.Lerp(pixelColor, Scene[l].Light.Color, intensity * Vector3.Dot(Vector3.Normalize(Scene[l].Position - triangle.Center), triangle.Perpendicular));
                                 }
                                 spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X + (xMax - x - 1) * _pixelize, (int)offset.Y + (yMax - y - 1) * _pixelize, _pixelize, _pixelize), pixelColor);
                             }

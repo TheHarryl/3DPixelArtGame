@@ -7,19 +7,52 @@ namespace _3DPixelArtEngine
 {
     public class Triangle
     {
-        public Vector3 Point1;
-        public Vector3 Point2;
-        public Vector3 Point3;
+        private Vector3 _point1;
+        private Vector3 _point2;
+        private Vector3 _point3;
+
+        public Vector3 Point1
+        {
+            get => _point1;
+            set
+            {
+                _point1 = value;
+                Center = (_point1 + _point2 + _point3) / 3f;
+                Perpendicular = Vector3.Cross(Point2 - Point1, Point3 - Point1);
+            }
+        }
+        public Vector3 Point2
+        {
+            get => _point2;
+            set
+            {
+                _point2 = value;
+                Center = (_point1 + _point2 + _point3) / 3f;
+                Perpendicular = Vector3.Cross(Point2 - Point1, Point3 - Point1);
+            }
+        }
+        public Vector3 Point3
+        {
+            get => _point3;
+            set
+            {
+                _point3 = value;
+                Center = (_point1 + _point2 + _point3) / 3f;
+                Perpendicular = Vector3.Cross(Point2 - Point1, Point3 - Point1);
+            }
+        }
 
         public Vector3 Center;
+        public Vector3 Perpendicular;
 
         public Triangle(Vector3 point1, Vector3 point2, Vector3 point3)
         {
-            Point1 = point1;
-            Point2 = point2;
-            Point3 = point3;
+            _point1 = point1;
+            _point2 = point2;
+            _point3 = point3;
 
             Center = (point1 + point2 + point3) / 3f;
+            Perpendicular = Vector3.Cross(Point2 - Point1, Point3 - Point1);
         }
 
         public bool Contains(Triangle triangle)
@@ -78,14 +111,13 @@ namespace _3DPixelArtEngine
         {
             // https://stackoverflow.com/questions/42740765/intersection-between-line-and-triangle-in-3d
 
-            Vector3 N = Vector3.Cross(Point2 - Point1, Point3 - Point1);
-            float det = -Vector3.Dot(ray.Direction, N);
+            float det = -Vector3.Dot(ray.Direction, Perpendicular);
             float invdet = 1f / det;
             Vector3 AO = ray.Origin - Point1;
             Vector3 DAO = Vector3.Cross(AO, ray.Direction);
             float u = Vector3.Dot(Point3 - Point1, DAO) * invdet;
             float v = -Vector3.Dot(Point2 - Point1, DAO) * invdet;
-            float t = Vector3.Dot(AO, N) * invdet;
+            float t = Vector3.Dot(AO, Perpendicular) * invdet;
             return (det >= 1e-6 && t >= 0f && u >= 0f && v >= 0f && (u + v) <= 1f);
         }
 
@@ -93,17 +125,14 @@ namespace _3DPixelArtEngine
         {
             // https://stackoverflow.com/questions/42740765/intersection-between-line-and-triangle-in-3d
 
-            Vector3 N = Vector3.Cross(Point2 - Point1, Point3 - Point1);
-            float t = -Vector3.Dot(ray.Origin - Point1, N) / Vector3.Dot(ray.Direction * 1000f, N);
-
+            float t = -Vector3.Dot(ray.Origin - Point1, Perpendicular) / Vector3.Dot(ray.Direction * 1000f, Perpendicular);
             return ray.Origin + t * (ray.Direction * 1000f);
         }
 
         public Ray GetReflection(Ray ray)
         {
-            Vector3 N = Vector3.Cross(Point2 - Point1, Point3 - Point1);
             Vector3 intersection = this.GetIntersection(ray);
-            Vector3 direction = ray.Direction - (2f * Vector3.Dot(ray.Direction, N) * N);
+            Vector3 direction = ray.Direction - (2f * Vector3.Dot(ray.Direction, Perpendicular) * Perpendicular);
             return new Ray(intersection, direction);
         }
     }
