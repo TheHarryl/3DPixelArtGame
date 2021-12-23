@@ -12,6 +12,8 @@ namespace _3DPixelArtEngine
 {
     public class PixelEngine
     {
+        private GraphicsDevice _graphicsDevice;
+
         private int _width;
         private int _height;
 
@@ -27,7 +29,9 @@ namespace _3DPixelArtEngine
 
         public PixelEngine(GraphicsDevice graphicsDevice, int width, int height, int pixelize = 3, float cameraSize = 0.1f)
         {
-            _rectangle = new Texture2D(graphicsDevice, 1, 1);
+            _graphicsDevice = graphicsDevice;
+
+            _rectangle = new Texture2D(_graphicsDevice, 1, 1);
             Color[] data = new Color[1];
             data[0] = Color.White;
             _rectangle.SetData(data);
@@ -69,10 +73,10 @@ namespace _3DPixelArtEngine
             return triangles;
         }
 
-        public Texture2D ImportTexture(GraphicsDevice graphicsDevice, string fileLocation)
+        public Texture2D ImportTexture(string fileLocation)
         {
             FileStream fileStream = new FileStream(fileLocation, FileMode.Open);
-            Texture2D texture = Texture2D.FromStream(graphicsDevice, fileStream);
+            Texture2D texture = Texture2D.FromStream(_graphicsDevice, fileStream);
             fileStream.Dispose();
 
             return texture;
