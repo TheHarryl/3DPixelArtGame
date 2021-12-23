@@ -69,6 +69,15 @@ namespace _3DPixelArtEngine
             return triangles;
         }
 
+        public Texture2D ImportTexture(GraphicsDevice graphicsDevice, string fileLocation)
+        {
+            FileStream fileStream = new FileStream(fileLocation, FileMode.Open);
+            Texture2D texture = Texture2D.FromStream(graphicsDevice, fileStream);
+            fileStream.Dispose();
+
+            return texture;
+        }
+
         public void Update(GameTime gameTime)
         {
             MouseState mouseState = Mouse.GetState();
