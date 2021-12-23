@@ -127,9 +127,14 @@ namespace _3DPixelArtEngine
 
         public Vector2 PositionToScreen(Vector3 position)
         {
-            Triangle cameraPlane = new Triangle(Camera.Origin, Camera.Origin + Camera.LateralAxis.Direction, Camera.Origin + Camera.LongitudinalAxis.Direction);
-            Vector3 cameraOffset = cameraPlane.GetIntersection(new Ray(position, -Camera.Direction)) - Camera.Origin;
-
+            Vector3 cameraStart = Camera.Origin - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
+            Triangle cameraPlane = new Triangle(cameraStart, cameraStart + Camera.LateralAxis.Direction, cameraStart + Camera.LongitudinalAxis.Direction);
+            Triangle cameraLateralPlane = new Triangle(cameraStart + Camera.Direction, cameraStart + Camera.LateralAxis.Direction, cameraStart - Camera.LateralAxis.Direction);
+            Triangle cameraLongitudinalPlane = new Triangle(cameraStart + Camera.Direction, cameraStart + Camera.LongitudinalAxis.Direction, cameraStart - Camera.LongitudinalAxis.Direction);
+            Vector3 cameraIntersection = cameraPlane.GetIntersection(new Ray(position, -Camera.Direction)) - cameraStart;
+            Vector3 cameraXIntersection = cameraLateralPlane.GetIntersection(new Ray(cameraIntersection, Camera.LateralAxis.Direction));
+            Vector3 cameraYIntersection = cameraLongitudinalPlane.GetIntersection(new Ray(cameraIntersection, Camera.LongitudinalAxis.Direction));
+            Vector2 cameraOffset = new Vector2(Vector3.Distance(cameraXIntersection, cameraIntersection), Vector3.Distance(cameraYIntersection, cameraIntersection));
             return new Vector2();
         }
 
