@@ -135,7 +135,7 @@ namespace _3DPixelArtEngine
             Vector3 cameraXIntersection = cameraLateralPlane.GetIntersection(new Ray(cameraIntersection, Camera.LateralAxis.Direction));
             Vector3 cameraYIntersection = cameraLongitudinalPlane.GetIntersection(new Ray(cameraIntersection, Camera.LongitudinalAxis.Direction));
             Vector2 cameraOffset = new Vector2(Vector3.Distance(cameraXIntersection, cameraIntersection), Vector3.Distance(cameraYIntersection, cameraIntersection));
-            return new Vector2();
+            return cameraOffset;
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 offset = new Vector2())
