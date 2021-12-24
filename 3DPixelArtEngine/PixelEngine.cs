@@ -130,12 +130,19 @@ namespace _3DPixelArtEngine
             Vector3 cameraStart = Camera.Origin - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
             Triangle cameraPlane = new Triangle(cameraStart, cameraStart + Camera.LateralAxis.Direction, cameraStart + Camera.LongitudinalAxis.Direction);
             Triangle cameraLateralPlane = new Triangle(cameraStart + Camera.Direction, cameraStart + Camera.LateralAxis.Direction, cameraStart - Camera.LateralAxis.Direction);
+            Triangle cameraLateralPlane2 = new Triangle(cameraStart + Camera.Direction + Camera.LongitudinalAxis.Direction * 0.001f, cameraStart + Camera.LateralAxis.Direction + Camera.LongitudinalAxis.Direction * 0.001f, cameraStart - Camera.LateralAxis.Direction + Camera.LongitudinalAxis.Direction * 0.001f);
             Triangle cameraLongitudinalPlane = new Triangle(cameraStart + Camera.Direction, cameraStart + Camera.LongitudinalAxis.Direction, cameraStart - Camera.LongitudinalAxis.Direction);
+            Triangle cameraLongitudinalPlane2 = new Triangle(cameraStart + Camera.Direction + Camera.LateralAxis.Direction * 0.001f, cameraStart + Camera.LongitudinalAxis.Direction + Camera.LateralAxis.Direction * 0.001f, cameraStart - Camera.LongitudinalAxis.Direction + Camera.LateralAxis.Direction * 0.001f);
             Vector3 cameraIntersection = cameraPlane.GetIntersection(new Ray(position, -Camera.Direction)) - cameraStart;
             Vector3 cameraXIntersection = cameraLateralPlane.GetIntersection(new Ray(cameraIntersection, Camera.LateralAxis.Direction));
+            Vector3 cameraXIntersection2 = cameraLateralPlane2.GetIntersection(new Ray(cameraIntersection, Camera.LateralAxis.Direction));
             Vector3 cameraYIntersection = cameraLongitudinalPlane.GetIntersection(new Ray(cameraIntersection, Camera.LongitudinalAxis.Direction));
-            Vector2 cameraOffset = new Vector2(Vector3.Distance(cameraXIntersection, cameraIntersection), Vector3.Distance(cameraYIntersection, cameraIntersection));
-            return cameraOffset;
+            Vector3 cameraYIntersection2 = cameraLongitudinalPlane2.GetIntersection(new Ray(cameraIntersection, Camera.LongitudinalAxis.Direction));
+            float cameraXDistance = Vector3.Distance(cameraXIntersection, cameraIntersection);
+            float cameraXDistance2 = Vector3.Distance(cameraXIntersection2, cameraIntersection);
+            float cameraYDistance = Vector3.Distance(cameraYIntersection, cameraIntersection);
+            float cameraYDistance2 = Vector3.Distance(cameraYIntersection2, cameraIntersection);
+            return new Vector2((cameraXDistance < cameraXDistance2 ? -1 : 1) * cameraXDistance * _cameraSize * _pixelize, (cameraYDistance < cameraYDistance2 ? -1 : 1) * cameraYDistance * _cameraSize * _pixelize);
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 offset = new Vector2())
@@ -171,6 +178,21 @@ namespace _3DPixelArtEngine
                             }
                         }
                     }
+                }
+            }
+            for (int i = 0; i < Scene.Count; i++)
+            {
+                if (Scene[i].Mesh == null) continue;
+                for (int v = 0; v < Scene[i].Mesh.Count; v++)
+                {
+                    Triangle triangle = Scene[i].Mesh[v];
+                    Vector2 Point1 = PositionToScreen(triangle.Point1);
+                    Vector2 Point2 = PositionToScreen(triangle.Point2);
+                    Vector2 Point3 = PositionToScreen(triangle.Point3);
+                    System.Diagnostics.Debug.WriteLine(Point1 + " " + Point2 + " " + Point3);
+                    DrawLine(spriteBatch, Point1, Point2, Color.Black);
+                    DrawLine(spriteBatch, Point2, Point3, Color.Black);
+                    DrawLine(spriteBatch, Point3, Point1, Color.Black);
                 }
             }
         }
