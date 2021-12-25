@@ -33,7 +33,9 @@ namespace _3DPixelArtGame
                 new Triangle(new Vector3(0f, 2f, 0f), new Vector3(0f, -2f, 5f), new Vector3(3f, -2f, -2f))
             };
 
-            _pixelEngine.Scene.Add(testObject);
+            Object testCube = new Object();
+            testCube.Mesh = PixelEngine.ImportMesh("C:/Users/rebek/source/repos/3DPixelArtGame/3DPixelArtGame/cube.obj");
+            _pixelEngine.Scene.Add(testCube);
 
             base.Initialize();
         }

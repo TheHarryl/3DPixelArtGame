@@ -48,7 +48,7 @@ namespace _3DPixelArtEngine
             _lastMouseState = Mouse.GetState();
         }
 
-        public List<Triangle> ImportMesh(string fileLocation)
+        public static List<Triangle> ImportMesh(string fileLocation)
         {
             List<Vector3> vertices = new List<Vector3>();
             List<Triangle> triangles = new List<Triangle>();
@@ -63,6 +63,57 @@ namespace _3DPixelArtEngine
                         string[] args = line.Split(" ");
                         vertices.Add(new Vector3(float.Parse(args[1]), float.Parse(args[2]), float.Parse(args[3])));
                     }
+                    if (line.StartsWith("f "))
+                    {
+                        string[] args = line.Split(" ");
+                        if (args.Length == 4) //three vertices => triangle
+                        {
+                            triangles.Add(new Triangle(vertices[int.Parse(args[1])], vertices[int.Parse(args[2])], vertices[int.Parse(args[3])]));
+                        } 
+                        else //otherwise, split into triangles using ears method
+                        {
+                            List<Vector3> polygonVertices = new List<Vector3>();
+                            for (int i = 1; i < args.Length; i++)
+                            {
+                                System.Diagnostics.Debug.WriteLine(i);
+                                polygonVertices.Add(vertices[int.Parse(args[i])-1]);
+                            }
+                            for (int i = 0; i < polygonVertices.Count; i++)
+                            {   
+                                if (polygonVertices.Count == 3)
+                                {
+                                    triangles.Add(new Triangle(polygonVertices[0], polygonVertices[1], polygonVertices[2]));
+                                }
+                                Triangle testTriangle;
+                                if (i == 0)
+                                {
+                                    testTriangle = new Triangle(polygonVertices[polygonVertices.Count - 1], polygonVertices[i], polygonVertices[i + 1]);
+                                }
+                                else if (i == polygonVertices.Count - 1)
+                                {
+                                    testTriangle = new Triangle(polygonVertices[i - 1], polygonVertices[i], polygonVertices[0]);
+                                }
+                                else
+                                {
+                                    testTriangle = new Triangle(polygonVertices[i - 1], polygonVertices[i], polygonVertices[i + 1]);
+                                }
+                                bool isEar = true;
+                                for (int j = 0; j < polygonVertices.Count; j++)
+                                {
+                                    if (j == i)
+                                        continue;
+                                    if (testTriangle.Contains(polygonVertices[j]))
+                                        isEar = false;
+                                }
+                                if (isEar) 
+                                {
+                                    triangles.Add(testTriangle);
+                                    polygonVertices.RemoveAt(i);
+                                    i = 0;
+                                }
+                            }    
+                        }
+                    }    
                 }
             }
 
@@ -79,7 +130,7 @@ namespace _3DPixelArtEngine
                 Camera.TranslateLocal(new Vector3(0f, difference.Y / 10f, difference.X / 10f));
             }
 
-            Scene[1].Rotation += new Vector3(0f, 50f, 0f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //Scene[1].Rotation += new Vector3(0f, 50f, 0f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             _lastMouseState = mouseState;
 

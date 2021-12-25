@@ -35,7 +35,11 @@ namespace _3DPixelArtEngine
         
         public bool Contains(Vector3 point)
         {
-            return false;
+            float Point1Weight = ((point.X * Point2.Y) - (point.Y * Point2.X) + ((((Point3.Y * Point2.X) - (Point3.X * Point2.Y)) * ((point.Z * Point2.Y) - (point.Y * Point2.Z) - (Point1.Z * Point2.Y))) / ((Point2.Y * Point3.Z) - (Point3.Y * Point2.Z)))) / (1 - ((((Point3.Y * Point2.X) - (Point3.X * Point2.Y)) * (Point1.Y * Point2.Z)) / ((Point2.Y * Point3.Z) - (Point3.Y * Point2.Z))));
+            float Point3Weight = ((point.Z * Point2.Y) - (point.Y * Point2.Z) + (Point1Weight * ((Point1.Y * Point2.Z) - (Point1.Z * Point2.Y)))) / ((Point2.Y * Point3.Z) - (Point3.Y * Point2.Z));
+            float Point2Weight = (point.Y - (Point1Weight * Point1.Y) - (Point3Weight * Point3.Y)) / Point2.Y;
+            Console.WriteLine(Point1Weight + Point2Weight + Point3Weight);
+            return Point1Weight >= 0f && Point2Weight >= 0f && Point3Weight >= 0f;
         }
 
         public bool Contains(Line line)
