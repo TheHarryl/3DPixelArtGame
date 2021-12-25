@@ -12,6 +12,8 @@ namespace _3DPixelArtEngine
 {
     public class PixelEngine
     {
+        private GraphicsDevice _graphicsDevice;
+
         private int _width;
         private int _height;
 
@@ -27,7 +29,9 @@ namespace _3DPixelArtEngine
 
         public PixelEngine(GraphicsDevice graphicsDevice, int width, int height, int pixelize = 3, float cameraSize = 0.1f)
         {
-            _rectangle = new Texture2D(graphicsDevice, 1, 1);
+            _graphicsDevice = graphicsDevice;
+
+            _rectangle = new Texture2D(_graphicsDevice, 1, 1);
             Color[] data = new Color[1];
             data[0] = Color.White;
             _rectangle.SetData(data);
@@ -120,6 +124,15 @@ namespace _3DPixelArtEngine
             return triangles;
         }
 
+        public Texture2D ImportTexture(string fileLocation)
+        {
+            FileStream fileStream = new FileStream(fileLocation, FileMode.Open);
+            Texture2D texture = Texture2D.FromStream(_graphicsDevice, fileStream);
+            fileStream.Dispose();
+
+            return texture;
+        }
+
         public void Update(GameTime gameTime)
         {
             MouseState mouseState = Mouse.GetState();
@@ -130,7 +143,7 @@ namespace _3DPixelArtEngine
                 Camera.TranslateLocal(new Vector3(0f, difference.Y / 10f, difference.X / 10f));
             }
 
-            //Scene[1].Rotation += new Vector3(0f, 50f, 0f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Scene[1].Rotation += new Vector3(0f, 0f, 50f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             _lastMouseState = mouseState;
 
@@ -165,10 +178,22 @@ namespace _3DPixelArtEngine
 
         public Vector2 PositionToScreen(Vector3 position)
         {
-            Triangle cameraPlane = new Triangle(Camera.Origin, Camera.Origin + Camera.LateralAxis.Direction, Camera.Origin + Camera.LongitudinalAxis.Direction);
-            Vector3 cameraOffset = cameraPlane.GetIntersection(new Ray(position, -Camera.Direction)) - Camera.Origin;
-
-            return new Vector2();
+            Vector3 cameraStart = Camera.Origin - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
+            Triangle cameraPlane = new Triangle(cameraStart, cameraStart + Camera.LateralAxis.Direction, cameraStart + Camera.LongitudinalAxis.Direction);
+            Triangle cameraLateralPlane = new Triangle(cameraStart + Camera.Direction, cameraStart + Camera.LateralAxis.Direction, cameraStart - Camera.LateralAxis.Direction);
+            Triangle cameraLateralPlane2 = new Triangle(cameraStart + Camera.Direction + Camera.LongitudinalAxis.Direction * 0.001f, cameraStart + Camera.LateralAxis.Direction + Camera.LongitudinalAxis.Direction * 0.001f, cameraStart - Camera.LateralAxis.Direction + Camera.LongitudinalAxis.Direction * 0.001f);
+            Triangle cameraLongitudinalPlane = new Triangle(cameraStart + Camera.Direction, cameraStart + Camera.LongitudinalAxis.Direction, cameraStart - Camera.LongitudinalAxis.Direction);
+            Triangle cameraLongitudinalPlane2 = new Triangle(cameraStart + Camera.Direction + Camera.LateralAxis.Direction * 0.001f, cameraStart + Camera.LongitudinalAxis.Direction + Camera.LateralAxis.Direction * 0.001f, cameraStart - Camera.LongitudinalAxis.Direction + Camera.LateralAxis.Direction * 0.001f);
+            Vector3 cameraIntersection = cameraPlane.GetIntersection(new Ray(position, -Camera.Direction)) - cameraStart;
+            Vector3 cameraXIntersection = cameraLateralPlane.GetIntersection(new Ray(cameraIntersection, Camera.LateralAxis.Direction));
+            Vector3 cameraXIntersection2 = cameraLateralPlane2.GetIntersection(new Ray(cameraIntersection, Camera.LateralAxis.Direction));
+            Vector3 cameraYIntersection = cameraLongitudinalPlane.GetIntersection(new Ray(cameraIntersection, Camera.LongitudinalAxis.Direction));
+            Vector3 cameraYIntersection2 = cameraLongitudinalPlane2.GetIntersection(new Ray(cameraIntersection, Camera.LongitudinalAxis.Direction));
+            float cameraXDistance = Vector3.Distance(cameraXIntersection, cameraIntersection);
+            float cameraXDistance2 = Vector3.Distance(cameraXIntersection2, cameraIntersection);
+            float cameraYDistance = Vector3.Distance(cameraYIntersection, cameraIntersection);
+            float cameraYDistance2 = Vector3.Distance(cameraYIntersection2, cameraIntersection);
+            return new Vector2((cameraXDistance < cameraXDistance2 ? -1 : 1) * cameraXDistance * _cameraSize * _pixelize, (cameraYDistance < cameraYDistance2 ? -1 : 1) * cameraYDistance * _cameraSize * _pixelize);
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 offset = new Vector2())
@@ -193,20 +218,32 @@ namespace _3DPixelArtEngine
                             Ray pixelRay = new Ray(cameraOrigin, Camera.Direction);
                             if (triangle.Contains(pixelRay))
                             {
-                                //float darken = (Vector3.Distance(cameraOrigin, triangle.GetIntersection(pixelRay)) - 5f) / 10f;
-                                Color pixelColor = Color.White;
+                                Color pixelColor = Color.Black;
                                 for (int l = 0; l < Scene.Count; l++)
                                 {
                                     if (Scene[l].Light == null || !Scene[l].Light.Enabled || Vector3.Distance(Scene[l].Position, triangle.Center) > Scene[l].Light.OuterRange) continue;
                                     float intensity = Scene[l].Light.GetIntensityAtDistance(Vector3.Distance(Scene[l].Position, triangle.Center));
-                                    Vector3 angle = triangle.GetReflection(new Ray(Scene[l].Position, triangle.Center)).Direction;
-
-                                    //pixelColor = Color.Lerp(pixelColor, Scene[i].Light.Color, );
+                                    pixelColor = Color.Lerp(pixelColor, Scene[l].Light.Color, intensity * Vector3.Dot(triangle.GetReflection(pixelRay).Direction, triangle.Normal));
                                 }
                                 spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X + (xMax - x - 1) * _pixelize, (int)offset.Y + (yMax - y - 1) * _pixelize, _pixelize, _pixelize), pixelColor);
                             }
                         }
                     }
+                }
+            }
+            for (int i = 0; i < Scene.Count; i++)
+            {
+                if (Scene[i].Mesh == null) continue;
+                for (int v = 0; v < Scene[i].Mesh.Count; v++)
+                {
+                    Triangle triangle = Scene[i].Mesh[v];
+                    Vector2 Point1 = PositionToScreen(triangle.Point1);
+                    Vector2 Point2 = PositionToScreen(triangle.Point2);
+                    Vector2 Point3 = PositionToScreen(triangle.Point3);
+                    System.Diagnostics.Debug.WriteLine(Point1 + " " + Point2 + " " + Point3);
+                    DrawLine(spriteBatch, Point1, Point2, Color.Black);
+                    DrawLine(spriteBatch, Point2, Point3, Color.Black);
+                    DrawLine(spriteBatch, Point3, Point1, Color.Black);
                 }
             }
         }
