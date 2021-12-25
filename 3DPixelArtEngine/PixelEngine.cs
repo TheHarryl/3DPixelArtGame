@@ -69,18 +69,24 @@ namespace _3DPixelArtEngine
                     }
                     if (line.StartsWith("f "))
                     {
-                        string[] args = line.Split(" ");
+                        string[] argsStr = line.Split(" ");
+                        string[][] args = new string[argsStr.Length][];
+                        for (int i = 0; i < argsStr.Length; i++)
+                        {
+                            args[i] = argsStr[i].Split("/");
+                        }    
+
                         if (args.Length == 4) //three vertices => triangle
                         {
-                            triangles.Add(new Triangle(vertices[int.Parse(args[1])], vertices[int.Parse(args[2])], vertices[int.Parse(args[3])]));
+                            triangles.Add(new Triangle(vertices[int.Parse(args[1][0])-1], vertices[int.Parse(args[2][0])-1], vertices[int.Parse(args[3][0])-1]));
                         } 
                         else //otherwise, split into triangles using ears method
                         {
                             List<Vector3> polygonVertices = new List<Vector3>();
                             for (int i = 1; i < args.Length; i++)
                             {
-                                System.Diagnostics.Debug.WriteLine(i);
-                                polygonVertices.Add(vertices[int.Parse(args[i])-1]);
+                                
+                                polygonVertices.Add(vertices[int.Parse(args[i][0])-1]);
                             }
                             for (int i = 0; i < polygonVertices.Count; i++)
                             {   

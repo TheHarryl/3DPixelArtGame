@@ -34,7 +34,7 @@ namespace _3DPixelArtGame
             };
 
             Object testCube = new Object();
-            testCube.Mesh = PixelEngine.ImportMesh("C:/Users/rebek/source/repos/3DPixelArtGame/3DPixelArtGame/cube.obj");
+            testCube.Mesh = PixelEngine.ImportMesh("C:/Users/rebek/source/repos/3DPixelArtGame/3DPixelArtGame/cubePro.obj");
             _pixelEngine.Scene.Add(testCube);
 
             base.Initialize();
