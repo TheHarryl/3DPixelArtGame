@@ -19,6 +19,7 @@ namespace _3DPixelArtEngine
                 _point1 = value;
                 Center = (_point1 + _point2 + _point3) / 3f;
                 Normal = Vector3.Cross(Point2 - Point1, Point3 - Point1);
+                
             }
         }
         public Vector3 Point2
@@ -122,7 +123,7 @@ namespace _3DPixelArtEngine
             float u = Vector3.Dot(Point3 - Point1, DAO) * invdet;
             float v = -Vector3.Dot(Point2 - Point1, DAO) * invdet;
             float t = Vector3.Dot(AO, Normal) * invdet;
-            return (det >= 1e-6 && t >= 0f && u >= 0f && v >= 0f && (u + v) <= 1f);
+            return (Math.Abs(det)  >= 1e-6 && t >= 0f && u >= 0f && v >= 0f && (u + v) <= 1f);
         }
 
         public Vector3 GetIntersection(Ray ray)

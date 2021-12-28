@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "WF6LRCp1MWmfDMpQ9G6KwB10yqX0eNtunLW4Z+R6k7R+ewZfvNKtE4E/BCEb2SAiuUtfWxrC2ZxeNjR/vUi9Pw==",
+  "dgSpecHash": "Qam22rsXdXvZp7EyqiHqjAmANWs9L5CTsDt8L5TvdivTHR3RYMzBYji4ePOeBR5zom9rEjmBBpMJ/Y8t/auz7A==",
   "success": true,
-  "projectFilePath": "C:\\Users\\rebek\\Source\\Repos\\3DPixelArtGame\\3DPixelArtGame\\3DPixelArtGame.csproj",
+  "projectFilePath": "C:\\Users\\Admin\\Source\\Repos\\3DPixelArtGame\\3DPixelArtGame\\3DPixelArtGame.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\rebek\\.nuget\\packages\\monogame.content.builder.task\\3.8.0.1641\\monogame.content.builder.task.3.8.0.1641.nupkg.sha512",
-    "C:\\Users\\rebek\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.0.1641\\monogame.framework.desktopgl.3.8.0.1641.nupkg.sha512"
+    "C:\\Users\\Admin\\.nuget\\packages\\monogame.content.builder.task\\3.8.0.1641\\monogame.content.builder.task.3.8.0.1641.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.0.1641\\monogame.framework.desktopgl.3.8.0.1641.nupkg.sha512"
   ],
   "logs": []
 }

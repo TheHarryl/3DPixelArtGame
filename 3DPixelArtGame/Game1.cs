@@ -4,6 +4,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using Vector3 = System.Numerics.Vector3;
+using System;
+using System.IO;
+using Object = _3DPixelArtEngine.Object;
+using System.Diagnostics;
 
 namespace _3DPixelArtGame
 {
@@ -13,6 +17,9 @@ namespace _3DPixelArtGame
         private SpriteBatch _spriteBatch;
 
         private PixelEngine _pixelEngine;
+
+        private string path;
+        private string objPath;
 
         public Game1()
         {
@@ -26,15 +33,16 @@ namespace _3DPixelArtGame
             // TODO: Add your initialization logic here
             _pixelEngine = new PixelEngine(_graphics.GraphicsDevice, 800, 480);
 
-            Object testObject = new Object();
-            testObject.Mesh = new List<Triangle>()
-            {
-                new Triangle(new Vector3(0f, 2f, 0f), new Vector3(3f, -2f, -2f), new Vector3(0f, -2f, 5f)),
-                new Triangle(new Vector3(0f, 2f, 0f), new Vector3(0f, -2f, 5f), new Vector3(3f, -2f, -2f))
-            };
+            path = Directory.GetCurrentDirectory();
+            objPath = Directory.GetParent(Directory.GetParent(Directory.GetParent(path).ToString()).ToString()).ToString();
 
+
+            Triangle testTriangle = new Triangle(new Vector3(0f, 2f, 0f), new Vector3(3f, -2f, -2f), new Vector3(0f, -2f, 5f));
+            Object testObject = new Object();
+            testObject.Mesh = new List<Triangle>();
+            testObject.Mesh.Add(testTriangle);
             Object testCube = new Object();
-            testCube.Mesh = PixelEngine.ImportMesh("C:/Users/rebek/source/repos/3DPixelArtGame/3DPixelArtGame/cubePro.obj");
+            testCube.Mesh = PixelEngine.ImportMesh(objPath + "/cubePro.obj");
             _pixelEngine.Scene.Add(testCube);
 
             base.Initialize();
@@ -65,7 +73,7 @@ namespace _3DPixelArtGame
             _spriteBatch.Begin();
 
             // TODO: Add your drawing code here
-            _pixelEngine.Draw(_spriteBatch);
+            _pixelEngine.DrawPerspective(_spriteBatch);
 
             base.Draw(gameTime);
 

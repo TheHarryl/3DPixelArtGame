@@ -18,3 +18,13 @@ C:\Users\rebek\Source\Repos\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp
 C:\Users\rebek\Source\Repos\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.AssemblyInfoInputs.cache
 C:\Users\rebek\Source\Repos\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.AssemblyInfo.cs
 C:\Users\rebek\Source\Repos\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.csproj.CoreCompileInputs.cache
+C:\Users\Admin\source\repos\3DPixelArtGame\3DPixelArtEngine\bin\Debug\netcoreapp3.1\3DPixelArtEngine.deps.json
+C:\Users\Admin\source\repos\3DPixelArtGame\3DPixelArtEngine\bin\Debug\netcoreapp3.1\3DPixelArtEngine.dll
+C:\Users\Admin\source\repos\3DPixelArtGame\3DPixelArtEngine\bin\Debug\netcoreapp3.1\3DPixelArtEngine.pdb
+C:\Users\Admin\source\repos\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.csproj.AssemblyReference.cache
+C:\Users\Admin\source\repos\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\source\repos\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.AssemblyInfoInputs.cache
+C:\Users\Admin\source\repos\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.AssemblyInfo.cs
+C:\Users\Admin\source\repos\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.csproj.CoreCompileInputs.cache
+C:\Users\Admin\source\repos\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.dll
+C:\Users\Admin\source\repos\3DPixelArtGame\3DPixelArtEngine\obj\Debug\netcoreapp3.1\3DPixelArtEngine.pdb
