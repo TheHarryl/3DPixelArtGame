@@ -28,6 +28,12 @@ namespace _3DPixelArtEngine
         private Texture2D _rectangle;
         private MouseState _lastMouseState;
 
+        private bool _perspectiveRendering;
+        private bool _perspectiveRenderingOuter;
+        private float _perspectiveRenderingDistance;
+        private float _perspectiveFOV;
+        private float _perspectiveCameraSize;
+
         public PixelEngine(GraphicsDevice graphicsDevice, int width, int height, int pixelize = 3, float cameraSize = 0.1f)
         {
             _graphicsDevice = graphicsDevice;
@@ -49,6 +55,10 @@ namespace _3DPixelArtEngine
             CameraLocked = false;
             _pixelize = pixelize;
             _cameraSize = cameraSize;
+
+            _perspectiveRendering = false;
+            _perspectiveRenderingOuter = true;
+            _perspectiveFOV = 120f;
 
             _lastMouseState = Mouse.GetState();
         }
@@ -232,9 +242,38 @@ namespace _3DPixelArtEngine
             return new Vector2((cameraXDistance < cameraXDistance2 ? -1 : 1) * cameraXDistance * _cameraSize * _pixelize, (cameraYDistance < cameraYDistance2 ? -1 : 1) * cameraYDistance * _cameraSize * _pixelize);
         }
 
+        public void EnablePerspectiveRenderingFrom(float fromDistance, float FOV, float perspectiveCameraSize)
+        {
+            _perspectiveRendering = true;
+            _perspectiveRenderingOuter = true;
+            _perspectiveRenderingDistance = fromDistance;
+            _perspectiveFOV = FOV;
+            _perspectiveCameraSize = perspectiveCameraSize;
+        }
+
+        public void EnablePerspectiveRenderingUntil(float untilDistance, float FOV, float perspectiveCameraSize)
+        {
+            _perspectiveRendering = true;
+            _perspectiveRenderingOuter = false;
+            _perspectiveRenderingDistance = untilDistance;
+            _perspectiveFOV = FOV;
+            _perspectiveCameraSize = perspectiveCameraSize;
+        }
+
+        public void DisablePerspectiveRendering()
+        {
+            _perspectiveRendering = false;
+        }
+
+        private bool IsPerspectiveRenderingAtDistance(float distance)
+        {
+            return _perspectiveRendering && ((_perspectiveRenderingOuter && distance >= _perspectiveRenderingDistance) || (!_perspectiveRenderingOuter && distance <= _perspectiveRenderingDistance));
+        }
+
         public void Draw(SpriteBatch spriteBatch, Vector2 offset = new Vector2())
         {
             Vector3 cameraStart = Camera.Origin - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
+            Vector3 cameraStartPerspective = Camera.Origin + (Camera.Direction * (_width * _cameraSize / 2f) / (float)Math.Tan(_perspectiveFOV * Math.PI / 360f)) - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
             int xMax = (int)Math.Ceiling((float)_width / _pixelize);
             int yMax = (int)Math.Ceiling((float)_height / _pixelize);
 

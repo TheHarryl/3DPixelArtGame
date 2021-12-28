@@ -88,5 +88,27 @@ namespace _3DPixelArtEngine
             }
             return invertedTriangles;
         }
+
+        public bool CollidesWith(Object target)
+        {
+            if (target.Mesh == null)
+                return false;
+            return CollidesWith(target.Mesh);
+        }
+
+        public bool CollidesWith(List<Triangle> mesh)
+        {
+            if (Mesh == null)
+                return false;
+            for (int i = 0; i < mesh.Count; i++)
+            {
+                for (int v = 0; v < Mesh.Count; v++)
+                {
+                    if (mesh[i].Contains(Mesh[v]))
+                        return true;
+                }
+            }
+            return false;
+        }
     }
 }
