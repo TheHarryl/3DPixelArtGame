@@ -21,6 +21,9 @@ namespace _3DPixelArtGame
         private string path;
         private string objPath;
 
+        private int frameCount = 0;
+        private DateTime startFrameCount = DateTime.Now;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -31,7 +34,7 @@ namespace _3DPixelArtGame
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            _pixelEngine = new PixelEngine(_graphics.GraphicsDevice, 800, 480);
+            _pixelEngine = new PixelEngine(_graphics.GraphicsDevice, 800, 480, 4);
 
             path = Directory.GetCurrentDirectory();
             objPath = Directory.GetParent(Directory.GetParent(Directory.GetParent(path).ToString()).ToString()).ToString();
@@ -43,7 +46,7 @@ namespace _3DPixelArtGame
             testObject.Mesh.Add(testTriangle);
             Object testCube = new Object();
             testCube.Mesh = PixelEngine.ImportMesh(objPath + "/cubePro.obj");
-            _pixelEngine.Scene.Add(testCube);
+            _pixelEngine.Scene.Add(testObject);
 
             base.Initialize();
         }
@@ -73,11 +76,20 @@ namespace _3DPixelArtGame
             _spriteBatch.Begin();
 
             // TODO: Add your drawing code here
-            _pixelEngine.DrawPerspective(_spriteBatch);
+            _pixelEngine.Draw(_spriteBatch, true);
 
             base.Draw(gameTime);
 
             _spriteBatch.End();
+
+            frameCount++;
+            if (DateTime.Now - startFrameCount >= new TimeSpan(0, 0, 1))
+            {
+                Debug.WriteLine(frameCount + " FPS");
+                frameCount = 0;
+                startFrameCount = DateTime.Now;
+            }
+
         }
     }
 }

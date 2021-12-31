@@ -103,7 +103,7 @@ namespace _3DPixelArtEngine
                                     triangle = new Triangle(vertices[int.Parse(args[2][0]) - 1], vertices[int.Parse(args[1][0]) - 1], vertices[int.Parse(args[3][0]) - 1]);
                             }
                             triangles.Add(triangle);
-                        } //TODO: add normal importing for non-triangular faces
+                        }
                         else //otherwise, split into triangles using ears method
                         {
                             List<Vector3> polygonVertices = new List<Vector3>();
@@ -270,9 +270,13 @@ namespace _3DPixelArtEngine
             return _perspectiveRendering && ((_perspectiveRenderingOuter && distance >= _perspectiveRenderingDistance) || (!_perspectiveRenderingOuter && distance <= _perspectiveRenderingDistance));
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 offset = new Vector2())
+        public void Draw(SpriteBatch spriteBatch, bool perspective = false, float fov = 120f, Vector2 offset = new Vector2())
         {
-            Vector3 cameraStart = Camera.Origin - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
+            Vector3 cameraStart;
+            if (!perspective)
+                cameraStart = Camera.Origin - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
+            else
+                cameraStart = Camera.Origin + (Camera.Direction * (_width * _cameraSize / 2f) / (float)Math.Tan(fov * Math.PI / 360f)) - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
             Vector3 cameraStartPerspective = Camera.Origin + (Camera.Direction * (_width * _cameraSize / 2f) / (float)Math.Tan(_perspectiveFOV * Math.PI / 360f)) - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
             int xMax = (int)Math.Ceiling((float)_width / _pixelize);
             int yMax = (int)Math.Ceiling((float)_height / _pixelize);
@@ -284,7 +288,12 @@ namespace _3DPixelArtEngine
                 for (int x = 0; x < xMax; x++)
                 {
                     Vector3 cameraOrigin = cameraStart + (Camera.LongitudinalAxis.Direction * y * _cameraSize * _pixelize) + (Camera.LateralAxis.Direction * x * _cameraSize * _pixelize);
-                    Ray pixelRay = new Ray(cameraOrigin, Camera.Direction);
+                    Ray pixelRay;
+                    if (!perspective)
+                        pixelRay = new Ray(cameraOrigin, Camera.Direction);
+                    else
+                        pixelRay = new Ray(Camera.Origin, Vector3.Normalize(cameraOrigin - Camera.Origin));
+
                     Triangle closestTriangle = null;
 
                     for (int i = 0; i < Scene.Count; i++)
@@ -293,9 +302,9 @@ namespace _3DPixelArtEngine
                         for (int v = 0; v < Scene[i].Mesh.Count; v++)
                         {
                             Triangle triangle = Scene[i].Mesh[v];
-                            double angleToNormal = Math.Acos(Vector3.Dot(pixelRay.Direction, Vector3.Normalize(triangle.Normal)));
-
-                            if (triangle.Contains(pixelRay) && angleToNormal > Math.PI/2 && (closestTriangle == null || Vector3.Distance(cameraOrigin, closestTriangle.GetIntersection(pixelRay)) > Vector3.Distance(cameraOrigin, triangle.GetIntersection(pixelRay))))
+                            if (!triangle.Contains(pixelRay))
+                                continue;
+                            if ((closestTriangle == null || Vector3.Distance(cameraOrigin, closestTriangle.GetIntersection(pixelRay)) > Vector3.Distance(cameraOrigin, triangle.GetIntersection(pixelRay))))
                                 closestTriangle = triangle;
                             /*Color pixelColor = Color.Black;
                             for (int l = 0; l < Scene.Count; l++)
@@ -311,12 +320,12 @@ namespace _3DPixelArtEngine
 
                     if (closestTriangle != null)
                     {
-                        float darken = (Vector3.Distance(cameraOrigin, closestTriangle.GetIntersection(pixelRay)) - 5f) / 10f;
-                        spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X + (xMax - x - 1) * _pixelize, (int)offset.Y + (yMax - y - 1) * _pixelize, _pixelize, _pixelize), Color.Lerp(Color.White, Color.Black, darken));
+                        float darken = (Vector3.Distance(cameraOrigin, closestTriangle.GetIntersection(pixelRay)) - 5f)/ 10f;
+                        spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X + (xMax - x - 1) * _pixelize, (int)offset.Y + (yMax - y - 1) * _pixelize, _pixelize, _pixelize), Color.Lerp(Color.Black, Color.White, darken));
                     }
                 }
             }
-            for (int i = 0; i < Scene.Count; i++)
+            /*for (int i = 0; i < Scene.Count; i++)
             {
                 if (Scene[i].Mesh == null) continue;
                 for (int v = 0; v < Scene[i].Mesh.Count; v++)
@@ -330,45 +339,7 @@ namespace _3DPixelArtEngine
                     DrawLine(spriteBatch, Point2, Point3, Color.Black);
                     DrawLine(spriteBatch, Point3, Point1, Color.Black);
                 }
-            }
-        }
-
-        public void DrawPerspective(SpriteBatch spriteBatch, float fov = 120, Vector2 offset = new Vector2())
-        {
-            _cameraSize = .0025f;
-            Vector3 cameraStart = Camera.Origin + (Camera.Direction * (_width * _cameraSize / 2f) / (float) Math.Tan(fov * Math.PI / 360f)) - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
-            int xMax = (int)Math.Ceiling((float)_width / _pixelize);
-            int yMax = (int)Math.Ceiling((float)_height / _pixelize);
-
-            spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X, (int)offset.Y, xMax * _pixelize, yMax * _pixelize), new Color(40, 40, 40));
-            for (int y = 0; y < yMax; y++)
-            {
-                for (int x = 0; x < xMax; x++)
-                {
-                    Vector3 cameraOrigin = cameraStart + (Camera.LongitudinalAxis.Direction * y * _cameraSize * _pixelize) + (Camera.LateralAxis.Direction * x * _cameraSize * _pixelize);
-                    Ray pixelRay = new Ray(Camera.Origin, Vector3.Normalize(cameraOrigin - Camera.Origin));
-                    Triangle closestTriangle = null;
-
-                    for (int i = 0; i < Scene.Count; i++)
-                    {
-                        if (Scene[i].Mesh == null) continue;
-                        for (int v = 0; v < Scene[i].Mesh.Count; v++)
-                        {
-                            Triangle triangle = Scene[i].Mesh[v];
-                            double angleToNormal = Math.Acos(Vector3.Dot(pixelRay.Direction, Vector3.Normalize(triangle.Normal)));
-
-                            if (triangle.Contains(pixelRay) && angleToNormal > Math.PI / 2 && (closestTriangle == null || Vector3.Distance(cameraOrigin, closestTriangle.GetIntersection(pixelRay)) > Vector3.Distance(cameraOrigin, triangle.GetIntersection(pixelRay))))
-                                closestTriangle = triangle;
-                        }
-                    }
-
-                    if (closestTriangle != null)
-                    {
-                        float darken = (Vector3.Distance(cameraOrigin, closestTriangle.GetIntersection(pixelRay)) - 5f) / 10f;
-                        spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X + (xMax - x - 1) * _pixelize, (int)offset.Y + (yMax - y - 1) * _pixelize, _pixelize, _pixelize), Color.Lerp(Color.White, Color.Black, darken));
-                    }
-                }
-            }
+            }*/
         }
 
         private void DrawLine(SpriteBatch spriteBatch, Vector2 begin, Vector2 end, Color color, int width = 1)

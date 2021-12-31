@@ -2,6 +2,7 @@
   "ExpandedNodes": [
     "",
     "\\3DPixelArtEngine",
+    "\\3DPixelArtEngine\\base",
     "\\3DPixelArtGame"
   ],
   "SelectedNode": "\\3DPixelArtGame.sln",

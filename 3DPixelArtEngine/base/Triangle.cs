@@ -88,28 +88,16 @@ namespace _3DPixelArtEngine
 
         public bool Contains(Vector vector)
         {
-            List<KeyValuePair<Vector3, Vector3>> sides = new List<KeyValuePair<Vector3, Vector3>>()
-            {
-                new KeyValuePair<Vector3, Vector3>(Point1, Point2),
-                new KeyValuePair<Vector3, Vector3>(Point2, Point3),
-                new KeyValuePair<Vector3, Vector3>(Point3, Point1)
-            };
-
-            int amount = 0;
-            for (int i = 0; i < sides.Count; i++)
-            {
-                float min = Math.Min(sides[i].Key.Z, sides[i].Value.Z);
-                float max = Math.Min(sides[i].Key.Z, sides[i].Value.Z);
-                if (min <= vector.Origin.Z && max >= vector.Origin.Z)
-                {
-                    float slope = (sides[i].Key.X - sides[i].Value.X) / (sides[i].Key.Z - sides[i].Value.Z);
-                    if (min + (slope * (vector.Origin.Z - min)) < vector.Origin.X)
-                    {
-                        amount++;
-                    }
-                }
-            }
-            return amount % 2 == 1;
+            float det = -Vector3.Dot(vector.Direction, Normal);
+            if (!(det >= 1e-6))
+                return false;
+            float invdet = 1f / det;
+            Vector3 AO = vector.Origin - Point1;
+            Vector3 DAO = Vector3.Cross(AO, vector.Direction);
+            float u = Vector3.Dot(Point3 - Point1, DAO) * invdet;
+            float v = -Vector3.Dot(Point2 - Point1, DAO) * invdet;
+            float t = Vector3.Dot(AO, Normal) * invdet;
+            return (t >= 0f && u >= 0f && v >= 0f && (u + v) <= 1f);
         }
 
         public bool Contains(Ray ray)
@@ -117,13 +105,15 @@ namespace _3DPixelArtEngine
             // https://stackoverflow.com/questions/42740765/intersection-between-line-and-triangle-in-3d
 
             float det = -Vector3.Dot(ray.Direction, Normal);
+            if (!(det >= 1e-6))
+                return false;
             float invdet = 1f / det;
             Vector3 AO = ray.Origin - Point1;
             Vector3 DAO = Vector3.Cross(AO, ray.Direction);
             float u = Vector3.Dot(Point3 - Point1, DAO) * invdet;
             float v = -Vector3.Dot(Point2 - Point1, DAO) * invdet;
             float t = Vector3.Dot(AO, Normal) * invdet;
-            return (Math.Abs(det)  >= 1e-6 && t >= 0f && u >= 0f && v >= 0f && (u + v) <= 1f);
+            return (t >= 0f && u >= 0f && v >= 0f && (u + v) <= 1f);
         }
 
         public Vector3 GetIntersection(Ray ray)
