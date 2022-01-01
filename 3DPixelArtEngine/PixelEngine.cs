@@ -224,7 +224,45 @@ namespace _3DPixelArtEngine
 
         public Vector2 PositionToScreen(Vector3 position)
         {
-            Vector3 cameraStart = Camera.Origin - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
+            /*
+            int xMax = (int)Math.Ceiling((float)_width / _pixelize);
+            int yMax = (int)Math.Ceiling((float)_height / _pixelize);
+            Vector3 cameraLeftBottom = Camera.Origin - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
+            Vector3 cameraRightBottom = cameraLeftBottom + (Camera.LateralAxis.Direction * (xMax - 1) * _cameraSize * _pixelize);
+            Vector3 cameraRightTop = cameraLeftBottom + (Camera.LongitudinalAxis.Direction * (yMax-1) * _cameraSize * _pixelize) + (Camera.LateralAxis.Direction * (xMax-1) * _cameraSize * _pixelize);
+            Vector3 cameraLeftTop = cameraLeftBottom + (Camera.LongitudinalAxis.Direction * (yMax - 1) * _cameraSize * _pixelize);
+            Ray positionRay = new Ray(Camera.Origin, Vector3.Normalize(position - Camera.Origin));
+            //try reversing the order of the normals if doesn't work
+            Triangle canvasLeftBottom = new Triangle(cameraLeftTop, cameraLeftBottom, cameraRightBottom);
+            Triangle canvasRightTop = new Triangle(cameraLeftTop, cameraRightBottom, cameraRightTop);
+            Vector3 projectedPosition;
+            if (canvasLeftBottom.Contains(positionRay))
+                projectedPosition = canvasLeftBottom.GetIntersection(positionRay);
+            else if (canvasRightTop.Contains(positionRay))
+                projectedPosition = canvasRightTop.GetIntersection(positionRay);
+            else
+                return new Vector2(-1, -1);
+
+            float distanceX1 = Vector3.Distance(projectedPosition, cameraLeftBottom);
+            float distanceX2 = Vector3.Distance(projectedPosition, cameraLeftTop);
+            float bX = (yMax - 1) * _cameraSize * _pixelize;
+            float sX = (distanceX1 + distanceX2 + bX) / 2f;
+            float x = (2f * (float)Math.Sqrt(sX * (sX - distanceX1) * (sX - distanceX2) * (sX - bX))) / bX;
+            float distanceY1 = Vector3.Distance(projectedPosition, cameraLeftBottom);
+            float distanceY2 = Vector3.Distance(projectedPosition, cameraRightBottom);
+            float bY = (xMax - 1) * _cameraSize * _pixelize;
+            float sY = (distanceY1 + distanceY2 + bY) / 2f;
+            float y = (2f * (float)Math.Sqrt(sY * (sY - distanceY1) * (sY - distanceY2) * (sY - bY))) / bY;
+
+                return new Vector2((x)/_cameraSize, (y) / _cameraSize);
+            */
+
+
+
+
+
+            
+            Vector3 cameraStart = Camera.Origin - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f); 
             Triangle cameraPlane = new Triangle(cameraStart, cameraStart + Camera.LateralAxis.Direction, cameraStart + Camera.LongitudinalAxis.Direction);
             Triangle cameraLateralPlane = new Triangle(cameraStart + Camera.Direction, cameraStart + Camera.LateralAxis.Direction, cameraStart - Camera.LateralAxis.Direction);
             Triangle cameraLateralPlane2 = new Triangle(cameraStart + Camera.Direction + Camera.LongitudinalAxis.Direction * 0.001f, cameraStart + Camera.LateralAxis.Direction + Camera.LongitudinalAxis.Direction * 0.001f, cameraStart - Camera.LateralAxis.Direction + Camera.LongitudinalAxis.Direction * 0.001f);
@@ -239,6 +277,7 @@ namespace _3DPixelArtEngine
             float cameraXDistance2 = Vector3.Distance(cameraXIntersection2, cameraIntersection);
             float cameraYDistance = Vector3.Distance(cameraYIntersection, cameraIntersection);
             float cameraYDistance2 = Vector3.Distance(cameraYIntersection2, cameraIntersection);
+            Debug.WriteLine(cameraXDistance + " " + cameraXDistance2);
             return new Vector2((cameraXDistance < cameraXDistance2 ? -1 : 1) * cameraXDistance * _cameraSize * _pixelize, (cameraYDistance < cameraYDistance2 ? -1 : 1) * cameraYDistance * _cameraSize * _pixelize);
         }
 
@@ -335,9 +374,10 @@ namespace _3DPixelArtEngine
                     Vector2 Point2 = PositionToScreen(triangle.Point2);
                     Vector2 Point3 = PositionToScreen(triangle.Point3);
                     System.Diagnostics.Debug.WriteLine(Point1 + " " + Point2 + " " + Point3);
-                    DrawLine(spriteBatch, Point1, Point2, Color.Black);
-                    DrawLine(spriteBatch, Point2, Point3, Color.Black);
-                    DrawLine(spriteBatch, Point3, Point1, Color.Black);
+                    DrawLine(spriteBatch, Point1, Point2, Color.Black, 20);
+                    DrawLine(spriteBatch, Point2, Point3, Color.Black, 20);
+                    DrawLine(spriteBatch, Point3, Point1, Color.Black, 20);
+                    DrawLine(spriteBatch, new Vector2(50f, 50f), new Vector2(100f, 100f), Color.Black, 20);
                 }
             }*/
         }

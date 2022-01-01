@@ -198,11 +198,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Admin\\Source\\Repos\\3DPixelArtGame\\3DPixelArtGame\\3DPixelArtGame.csproj",
+      "projectUniqueName": "C:\\Users\\Admin\\source\\repos\\3DPixelArtGame\\3DPixelArtGame\\3DPixelArtGame.csproj",
       "projectName": "3DPixelArtGame",
-      "projectPath": "C:\\Users\\Admin\\Source\\Repos\\3DPixelArtGame\\3DPixelArtGame\\3DPixelArtGame.csproj",
+      "projectPath": "C:\\Users\\Admin\\source\\repos\\3DPixelArtGame\\3DPixelArtGame\\3DPixelArtGame.csproj",
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Admin\\Source\\Repos\\3DPixelArtGame\\3DPixelArtGame\\obj\\",
+      "outputPath": "C:\\Users\\Admin\\source\\repos\\3DPixelArtGame\\3DPixelArtGame\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -219,8 +219,8 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "projectReferences": {
-            "C:\\Users\\Admin\\Source\\Repos\\3DPixelArtGame\\3DPixelArtEngine\\3DPixelArtEngine.csproj": {
-              "projectPath": "C:\\Users\\Admin\\Source\\Repos\\3DPixelArtGame\\3DPixelArtEngine\\3DPixelArtEngine.csproj"
+            "C:\\Users\\Admin\\source\\repos\\3DPixelArtGame\\3DPixelArtEngine\\3DPixelArtEngine.csproj": {
+              "projectPath": "C:\\Users\\Admin\\source\\repos\\3DPixelArtGame\\3DPixelArtEngine\\3DPixelArtEngine.csproj"
             }
           }
         }
