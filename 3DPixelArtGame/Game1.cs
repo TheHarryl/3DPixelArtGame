@@ -39,11 +39,22 @@ namespace _3DPixelArtGame
             path = Directory.GetCurrentDirectory();
             objPath = Directory.GetParent(Directory.GetParent(Directory.GetParent(path).ToString()).ToString()).ToString();
 
-
             Triangle testTriangle = new Triangle(new Vector3(0f, 2f, 0f), new Vector3(3f, -2f, -2f), new Vector3(0f, -2f, 5f));
             Object testObject = new Object();
             testObject.Mesh = new List<Triangle>();
             testObject.Mesh.Add(testTriangle);
+            testObject.Mesh.Add(testTriangle);
+            testObject.Mesh.Add(testTriangle);
+            testObject.Mesh.Add(testTriangle);
+            testObject.Mesh.Add(testTriangle);
+            testObject.Mesh.Add(testTriangle);
+            testObject.Mesh.Add(testTriangle);
+            testObject.Mesh.Add(testTriangle);
+            testObject.Mesh.Add(testTriangle);
+            testObject.Mesh.Add(testTriangle);
+            testObject.Mesh.Add(testTriangle);
+            testObject.Mesh.Add(testTriangle);
+            //_pixelEngine.Scene.Add(testObject);
             Object testCube = new Object();
             testCube.Mesh = PixelEngine.ImportMesh(objPath + "/cubePro.obj");
             _pixelEngine.Scene.Add(testObject);
@@ -73,10 +84,12 @@ namespace _3DPixelArtGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
 
             // TODO: Add your drawing code here
-            _pixelEngine.Draw(_spriteBatch, true);
+            _pixelEngine.Render(true);
+
+            _pixelEngine.Draw(_spriteBatch);
 
             base.Draw(gameTime);
 

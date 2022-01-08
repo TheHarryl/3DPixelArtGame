@@ -34,6 +34,9 @@ namespace _3DPixelArtEngine
         private float _perspectiveFOV;
         private float _perspectiveCameraSize;
 
+        public Color[] Screen;
+        private Texture2D _screen;
+
         public PixelEngine(GraphicsDevice graphicsDevice, int width, int height, int pixelize = 3, float cameraSize = 0.1f)
         {
             _graphicsDevice = graphicsDevice;
@@ -42,6 +45,9 @@ namespace _3DPixelArtEngine
             Color[] data = new Color[1];
             data[0] = Color.White;
             _rectangle.SetData(data);
+
+            Screen = new Color[(int)Math.Ceiling((float)width / pixelize) * (int)Math.Ceiling((float)height / pixelize)];
+            _screen = new Texture2D(_graphicsDevice, (int)Math.Ceiling((float)width / pixelize), (int)Math.Ceiling((float)height / pixelize));
 
             Object Sun = new Object(new Vector3(0f, 10000f, 0f));
             Sun.Light = new PointLight(Color.White, 100000f, 100000f);
@@ -187,7 +193,7 @@ namespace _3DPixelArtEngine
                 Camera.TranslateLocal(new Vector3(0f, difference.Y / 10f, difference.X / 10f));
             }
 
-            //Scene[1].Rotation += new Vector3(0f, 0f, 50f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Scene[1].Rotation += new Vector3(0f, 0f, 50f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             _lastMouseState = mouseState;
 
@@ -220,6 +226,8 @@ namespace _3DPixelArtEngine
                 Camera.TranslateLocal(new Vector3(0f, amount, 0f));
             if (state.IsKeyDown(Keys.Q))
                 Camera.TranslateLocal(new Vector3(0f, -amount, 0f));
+
+            
         }
 
         public Vector2 PositionToScreen(Vector3 position)
@@ -257,11 +265,6 @@ namespace _3DPixelArtEngine
                 return new Vector2((x)/_cameraSize, (y) / _cameraSize);
             */
 
-
-
-
-
-            
             Vector3 cameraStart = Camera.Origin - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f); 
             Triangle cameraPlane = new Triangle(cameraStart, cameraStart + Camera.LateralAxis.Direction, cameraStart + Camera.LongitudinalAxis.Direction);
             Triangle cameraLateralPlane = new Triangle(cameraStart + Camera.Direction, cameraStart + Camera.LateralAxis.Direction, cameraStart - Camera.LateralAxis.Direction);
@@ -309,18 +312,19 @@ namespace _3DPixelArtEngine
             return _perspectiveRendering && ((_perspectiveRenderingOuter && distance >= _perspectiveRenderingDistance) || (!_perspectiveRenderingOuter && distance <= _perspectiveRenderingDistance));
         }
 
-        public void Draw(SpriteBatch spriteBatch, bool perspective = false, float fov = 120f, Vector2 offset = new Vector2())
+        public void Render(bool perspective = false, float fov = 120f)
         {
             Vector3 cameraStart;
             if (!perspective)
                 cameraStart = Camera.Origin - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
             else
                 cameraStart = Camera.Origin + (Camera.Direction * (_width * _cameraSize / 2f) / (float)Math.Tan(fov * Math.PI / 360f)) - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
+            
             Vector3 cameraStartPerspective = Camera.Origin + (Camera.Direction * (_width * _cameraSize / 2f) / (float)Math.Tan(_perspectiveFOV * Math.PI / 360f)) - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
             int xMax = (int)Math.Ceiling((float)_width / _pixelize);
             int yMax = (int)Math.Ceiling((float)_height / _pixelize);
 
-            spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X, (int)offset.Y, xMax * _pixelize, yMax * _pixelize), new Color(40, 40, 40));
+            Screen = new Color[(int)Math.Ceiling((float)_width / _pixelize) * (int)Math.Ceiling((float)_height / _pixelize)];
 
             for (int y = 0; y < yMax; y++)
             {
@@ -353,14 +357,14 @@ namespace _3DPixelArtEngine
                                 pixelColor = Color.Lerp(pixelColor, Scene[l].Light.Color, intensity * Vector3.Dot(triangle.GetReflection(pixelRay).Direction, triangle.Normal));
                             }
                             spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X + (xMax - x - 1) * _pixelize, (int)offset.Y + (yMax - y - 1) * _pixelize, _pixelize, _pixelize), pixelColor);*/
-                           
+
                         }
                     }
 
                     if (closestTriangle != null)
                     {
-                        float darken = (Vector3.Distance(cameraOrigin, closestTriangle.GetIntersection(pixelRay)) - 5f)/ 10f;
-                        spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X + (xMax - x - 1) * _pixelize, (int)offset.Y + (yMax - y - 1) * _pixelize, _pixelize, _pixelize), Color.Lerp(Color.Black, Color.White, darken));
+                        float darken = (Vector3.Distance(cameraOrigin, closestTriangle.GetIntersection(pixelRay)) - 5f) / 10f;
+                        Screen[(xMax - x - 1) + (yMax - y - 1) * xMax] = Color.Lerp(Color.Black, Color.White, darken);
                     }
                 }
             }
@@ -380,6 +384,13 @@ namespace _3DPixelArtEngine
                     DrawLine(spriteBatch, new Vector2(50f, 50f), new Vector2(100f, 100f), Color.Black, 20);
                 }
             }*/
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Vector2 offset = new Vector2())
+        {
+            _screen.SetData(Screen);
+            spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X, (int)offset.Y, _width, _height), new Color(40, 40, 40));
+            spriteBatch.Draw(_screen, new Rectangle((int)offset.X, (int)offset.Y, (int)Math.Ceiling((float)_width / _pixelize) * _pixelize, (int)Math.Ceiling((float)_height / _pixelize) * _pixelize), Color.White);
         }
 
         private void DrawLine(SpriteBatch spriteBatch, Vector2 begin, Vector2 end, Color color, int width = 1)
