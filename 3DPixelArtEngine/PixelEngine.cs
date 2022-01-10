@@ -37,7 +37,7 @@ namespace _3DPixelArtEngine
         public Color[] Screen;
         private Texture2D _screen;
 
-        public PixelEngine(GraphicsDevice graphicsDevice, int width, int height, int pixelize = 3, float cameraSize = 0.1f)
+        public PixelEngine(GraphicsDevice graphicsDevice, int width, int height, int pixelize = 3, float cameraSize = 0.05f)
         {
             _graphicsDevice = graphicsDevice;
 
@@ -88,7 +88,7 @@ namespace _3DPixelArtEngine
                 Camera.TranslateLocal(new Vector3(0f, difference.Y / 10f, difference.X / 10f));
             }
 
-            Scene[0].Mesh.Rotation += new Vector3(0f, 0f, 50f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Scene[0].Rotation += new Vector3(0f, 0f, 50f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
             //Scene[0].Mesh.Position += new Vector3(0f, 1f, 0f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             _lastMouseState = mouseState;
@@ -298,6 +298,10 @@ namespace _3DPixelArtEngine
                     DrawLine(spriteBatch, Point1, Point2, Color.Black, 2);
                     DrawLine(spriteBatch, Point2, Point3, Color.Black, 2);
                     DrawLine(spriteBatch, Point3, Point1, Color.Black, 2);
+
+                    DrawLine(spriteBatch, PositionToScreenOrthographic(triangle.Point1), PositionToScreenOrthographic(triangle.Point1 + triangle.Normal * 0.2f), Color.Black, 2);
+                    DrawLine(spriteBatch, PositionToScreenOrthographic(triangle.Point2), PositionToScreenOrthographic(triangle.Point2 + triangle.Normal * 0.2f), Color.Black, 2);
+                    DrawLine(spriteBatch, PositionToScreenOrthographic(triangle.Point3), PositionToScreenOrthographic(triangle.Point3 + triangle.Normal * 0.2f), Color.Black, 2);
                     DrawLine(spriteBatch, Screen1, Screen2, Color.Black, 2);
                     DrawLine(spriteBatch, Screen2, Screen3, Color.Black, 2);
                     DrawLine(spriteBatch, Screen3, Screen4, Color.Black, 2);

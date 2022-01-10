@@ -10,8 +10,49 @@ namespace _3DPixelArtEngine
 {
     public class Object
     {
-        public Mesh Mesh;
-        public PointLight Light;
+        private Mesh _mesh;
+        private PointLight _light;
+
+        public Mesh Mesh {
+            get => _mesh;
+            set {
+                _mesh = value;
+                _mesh.Parent = this;
+            }
+        }
+        public PointLight Light
+        {
+            get => _light;
+            set
+            {
+                _light = value;
+                _light.Parent = this;
+            }
+        }
+
+        private Vector3 _position;
+        private Vector3 _rotation;
+
+        public Vector3 Position
+        {
+            get => _position;
+            set
+            {
+                _position = value;
+                if (Mesh != null)
+                    Mesh.Offset = Mesh.Offset;
+            }
+        }
+        public Vector3 Rotation
+        {
+            get => _rotation;
+            set
+            {
+                _rotation = new Vector3(value.X % 360, value.Y % 360, value.Z % 360);
+                if (Mesh != null)
+                    Mesh.Rotation = Mesh.Rotation;
+            }
+        }
 
         public Object()
         {

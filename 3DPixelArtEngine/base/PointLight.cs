@@ -9,6 +9,9 @@ namespace _3DPixelArtEngine
 {
     public class PointLight
     {
+        public Object Parent;
+        public Vector3 Offset;
+        public Vector3 Rotation;
         public bool Enabled;
 
         public Color Color;
@@ -36,7 +39,7 @@ namespace _3DPixelArtEngine
 
         public float GetIntensityAtDistance(float distance)
         {
-            if (distance > OuterRange) return 0f;
+            if (distance > OuterRange || !Enabled) return 0f;
             if (distance <= InnerRange) return Intensity;
             float layerLength = (OuterRange - InnerRange) / (LightQuantization - 1);
             int layer = (int)Math.Ceiling((distance - InnerRange) / layerLength);

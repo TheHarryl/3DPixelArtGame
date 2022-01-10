@@ -8,23 +8,24 @@ namespace _3DPixelArtEngine
 {
     public class Mesh
     {
+        public Object Parent;
         private List<Triangle> _triangles;
         private List<Triangle> _transformedTriangles;
-        private Vector3 _position;
+        private Vector3 _offset;
         private Vector3 _rotation;
         private Vector3 _scale;
 
-        public Mesh(List<Triangle> triangles, Vector3 position = new Vector3(), Vector3 rotation = new Vector3())
+        public Mesh(List<Triangle> triangles, Vector3 offset = new Vector3(), Vector3 rotation = new Vector3())
         {
-            _position = position;
+            _offset = offset;
             _rotation = rotation;
             _scale = new Vector3(1f, 1f, 1f);
             SetTriangles(triangles);
         }
 
-        public Mesh(string fileLocation, Vector3 position = new Vector3(), Vector3 rotation = new Vector3())
+        public Mesh(string fileLocation, Vector3 offset = new Vector3(), Vector3 rotation = new Vector3())
         {
-            _position = position;
+            _offset = offset;
             _rotation = rotation;
             _scale = new Vector3(1f, 1f, 1f);
             SetTriangles(fileLocation);
@@ -154,27 +155,29 @@ namespace _3DPixelArtEngine
             return invertedTriangles;
         }
 
-        private void TransformMesh()
+        protected void TransformMesh()
         {
+            Vector3 position = Offset + (this.Parent == null ? Vector3.Zero : this.Parent.Position);
+            Vector3 rotation = Rotation + (this.Parent == null ? Vector3.Zero : this.Parent.Rotation);
             _transformedTriangles = new List<Triangle>();
             for (int i = 0; i < _triangles.Count; i++)
             {
                 Vector vector1 = new Vector(Vector3.Zero, _triangles[i].Point1);
                 Vector vector2 = new Vector(Vector3.Zero, _triangles[i].Point2);
                 Vector vector3 = new Vector(Vector3.Zero, _triangles[i].Point3);
-                vector1.Rotate(Rotation);
-                vector2.Rotate(Rotation);
-                vector3.Rotate(Rotation);
-                _transformedTriangles.Add(new Triangle(Position + vector1.Displacement * Scale.X, Position + vector2.Displacement * Scale.Y, Position + vector3.Displacement * Scale.Z));
+                vector1.Rotate(rotation);
+                vector2.Rotate(rotation);
+                vector3.Rotate(rotation);
+                _transformedTriangles.Add(new Triangle(position + vector1.Displacement * Scale.X, position + vector2.Displacement * Scale.Y, position + vector3.Displacement * Scale.Z));
             }
         }
 
-        public Vector3 Position
+        public Vector3 Offset
         {
-            get => _position;
+            get => _offset;
             set
             {
-                _position = value;
+                _offset = value;
                 TransformMesh();
             }
         }

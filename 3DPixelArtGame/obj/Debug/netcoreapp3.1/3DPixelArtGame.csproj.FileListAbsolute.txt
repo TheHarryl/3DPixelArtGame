@@ -75,3 +75,4 @@ C:\Users\Admin\source\repos\3DPixelArtGame\3DPixelArtGame\obj\Debug\netcoreapp3.
 C:\Users\Admin\source\repos\3DPixelArtGame\3DPixelArtGame\obj\Debug\netcoreapp3.1\3DPixelArtGame.dll
 C:\Users\Admin\source\repos\3DPixelArtGame\3DPixelArtGame\obj\Debug\netcoreapp3.1\3DPixelArtGame.pdb
 C:\Users\Admin\source\repos\3DPixelArtGame\3DPixelArtGame\obj\Debug\netcoreapp3.1\3DPixelArtGame.genruntimeconfig.cache
+C:\Users\harry\Desktop\3DPixelArtGame\3DPixelArtGame\obj\Debug\netcoreapp3.1\3DPixelArtGame.csproj.CopyComplete
