@@ -89,7 +89,7 @@ namespace _3DPixelArtEngine
             }
 
             Scene[0].Mesh.Rotation += new Vector3(0f, 0f, 50f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            Scene[0].Mesh.Position += new Vector3(0f, 1f, 0f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //Scene[0].Mesh.Position += new Vector3(0f, 1f, 0f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             _lastMouseState = mouseState;
 
@@ -136,7 +136,7 @@ namespace _3DPixelArtEngine
             Triangle cameraLateralPlane2 = new Triangle(cameraStart + Camera.Direction + Camera.LongitudinalAxis.Direction * 0.1f, cameraStart + Camera.LateralAxis.Direction + Camera.LongitudinalAxis.Direction * 0.1f, cameraStart - Camera.LateralAxis.Direction + Camera.LongitudinalAxis.Direction * 0.1f);
             Triangle cameraLongitudinalPlane = new Triangle(cameraStart + Camera.Direction, cameraStart + Camera.LongitudinalAxis.Direction, cameraStart - Camera.LongitudinalAxis.Direction);
             Triangle cameraLongitudinalPlane2 = new Triangle(cameraStart + Camera.Direction + Camera.LateralAxis.Direction * 0.1f, cameraStart + Camera.LongitudinalAxis.Direction + Camera.LateralAxis.Direction * 0.1f, cameraStart - Camera.LongitudinalAxis.Direction + Camera.LateralAxis.Direction * 0.1f);
-            Vector3 cameraIntersection = cameraPlane.GetIntersection(new Ray(position, -Camera.Direction)) - cameraStart;
+            Vector3 cameraIntersection = cameraPlane.GetIntersection(new Ray(position, -Camera.Direction)) - Camera.Origin;
             Vector3 cameraXIntersection = cameraLongitudinalPlane.GetIntersection(new Ray(cameraIntersection, Camera.LateralAxis.Direction));
             Vector3 cameraXIntersection2 = cameraLongitudinalPlane2.GetIntersection(new Ray(cameraIntersection, Camera.LateralAxis.Direction));
             Vector3 cameraYIntersection = cameraLateralPlane.GetIntersection(new Ray(cameraIntersection, Camera.LongitudinalAxis.Direction));
