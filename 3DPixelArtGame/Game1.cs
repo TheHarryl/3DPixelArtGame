@@ -45,7 +45,6 @@ namespace _3DPixelArtGame
                 new Triangle(new Vector3(0f, 2f, 0f), new Vector3(3f, -2f, -2f), new Vector3(0f, -2f, 5f)),
                 new Triangle(new Vector3(0f, 2f, 0f), new Vector3(0f, -2f, 5f), new Vector3(3f, -2f, -2f)),
             });
-            //_pixelEngine.Scene.Add(testObject);
             Object testCube = new Object();
             testCube.Mesh = new Mesh(objPath + "/cubePro.obj");
             _pixelEngine.Scene.Add(testObject);

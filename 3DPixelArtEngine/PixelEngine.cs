@@ -295,7 +295,6 @@ namespace _3DPixelArtEngine
                     Vector2 Screen2 = PositionToScreenOrthographic(Camera.Origin - Camera.LateralAxis.Direction * _width * _cameraSize / 2f + Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f);
                     Vector2 Screen3 = PositionToScreenOrthographic(Camera.Origin + Camera.LateralAxis.Direction * _width * _cameraSize / 2f + Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f);
                     Vector2 Screen4 = PositionToScreenOrthographic(Camera.Origin + Camera.LateralAxis.Direction * _width * _cameraSize / 2f - Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f);
-                    System.Diagnostics.Debug.WriteLine(Point1 + " " + Point2 + " " + Point3);
                     DrawLine(spriteBatch, Point1, Point2, Color.Black, 2);
                     DrawLine(spriteBatch, Point2, Point3, Color.Black, 2);
                     DrawLine(spriteBatch, Point3, Point1, Color.Black, 2);
