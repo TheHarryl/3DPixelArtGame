@@ -15,13 +15,13 @@ namespace _3DPixelArtEngine
     {
         private GraphicsDevice _graphicsDevice;
 
-        private int _width;
-        private int _height;
+        public int Width;
+        public int Height;
 
         public Ray3 Camera;
+        public float CameraSize;
         public bool CameraLocked;
-        private int _pixelize;
-        private float _cameraSize;
+        public int PixelRatio;
 
         public List<Object> Scene;
 
@@ -37,7 +37,7 @@ namespace _3DPixelArtEngine
         public Color[] Screen;
         private Texture2D _screen;
 
-        public PixelEngine(GraphicsDevice graphicsDevice, int width, int height, int pixelize = 3, float cameraSize = 0.05f)
+        public PixelEngine(GraphicsDevice graphicsDevice, int width, int height, int pixelRatio = 3, float cameraSize = 0.05f)
         {
             _graphicsDevice = graphicsDevice;
 
@@ -46,21 +46,21 @@ namespace _3DPixelArtEngine
             data[0] = Color.White;
             _rectangle.SetData(data);
 
-            Screen = new Color[(int)Math.Ceiling((float)width / pixelize) * (int)Math.Ceiling((float)height / pixelize)];
-            _screen = new Texture2D(_graphicsDevice, (int)Math.Ceiling((float)width / pixelize), (int)Math.Ceiling((float)height / pixelize));
+            Screen = new Color[(int)Math.Ceiling((float)width / pixelRatio) * (int)Math.Ceiling((float)height / pixelRatio)];
+            _screen = new Texture2D(_graphicsDevice, (int)Math.Ceiling((float)width / pixelRatio), (int)Math.Ceiling((float)height / pixelRatio));
 
             //Object Sun = new Object(new Vector3(0f, 10000f, 0f));
             //Sun.Light = new PointLight(Color.White, 100000f, 100000f);
             //Sun.Light.Enabled = true;
             Scene = new List<Object>() {  };
 
-            _width = width;
-            _height = height;
+            Width = width;
+            Height = height;
 
             Camera = new Ray3(new Vector3(-10f, 0f, 0f));
             CameraLocked = false;
-            _pixelize = pixelize;
-            _cameraSize = cameraSize;
+            PixelRatio = pixelRatio;
+            CameraSize = cameraSize;
 
             _perspectiveRendering = false;
             _perspectiveRenderingOuter = true;
@@ -82,7 +82,7 @@ namespace _3DPixelArtEngine
         {
             MouseState mouseState = Mouse.GetState();
 
-            if (_lastMouseState.RightButton == ButtonState.Pressed && mouseState.RightButton == ButtonState.Pressed)
+            if (_lastMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Pressed)
             {
                 Vector2 difference = new Vector2(mouseState.X - _lastMouseState.X, mouseState.Y - _lastMouseState.Y);
                 Camera.TranslateLocal(new Vector3(0f, difference.Y / 10f, difference.X / 10f));
@@ -128,15 +128,15 @@ namespace _3DPixelArtEngine
 
         public Vector2 PositionToScreenOrthographic(Vector3 position)
         {
-            float cameraXLength = _width * _cameraSize;
-            float cameraYLength = _height * _cameraSize;
-            Vector3 cameraStart = Camera.Origin + (Camera.LongitudinalAxis.Direction * _height + Camera.LateralAxis.Direction * _width) * _cameraSize / 2f;
-            Triangle cameraPlane = new Triangle(cameraStart, cameraStart + Camera.LateralAxis.Direction, cameraStart + Camera.LongitudinalAxis.Direction);
-            Triangle cameraLateralPlane = new Triangle(cameraStart + Camera.Direction, cameraStart + Camera.LateralAxis.Direction, cameraStart - Camera.LateralAxis.Direction);
-            Triangle cameraLateralPlane2 = new Triangle(cameraStart + Camera.Direction + Camera.LongitudinalAxis.Direction * 0.1f, cameraStart + Camera.LateralAxis.Direction + Camera.LongitudinalAxis.Direction * 0.1f, cameraStart - Camera.LateralAxis.Direction + Camera.LongitudinalAxis.Direction * 0.1f);
-            Triangle cameraLongitudinalPlane = new Triangle(cameraStart + Camera.Direction, cameraStart + Camera.LongitudinalAxis.Direction, cameraStart - Camera.LongitudinalAxis.Direction);
-            Triangle cameraLongitudinalPlane2 = new Triangle(cameraStart + Camera.Direction + Camera.LateralAxis.Direction * 0.1f, cameraStart + Camera.LongitudinalAxis.Direction + Camera.LateralAxis.Direction * 0.1f, cameraStart - Camera.LongitudinalAxis.Direction + Camera.LateralAxis.Direction * 0.1f);
-            Vector3 cameraIntersection = cameraPlane.GetIntersection(new Ray(position, -Camera.Direction)) - Camera.Origin;
+            float cameraXLength = Width * CameraSize;
+            float cameraYLength = Height * CameraSize;
+            Vector3 cameraStart = Camera.Origin + (Camera.LongitudinalAxis.Direction * Height + Camera.LateralAxis.Direction * Width) * CameraSize / 2f;
+            Plane cameraPlane = new Plane(cameraStart, cameraStart + Camera.LateralAxis.Direction, cameraStart + Camera.LongitudinalAxis.Direction);
+            Plane cameraLateralPlane = new Plane(cameraStart + Camera.Direction, cameraStart + Camera.LateralAxis.Direction, cameraStart - Camera.LateralAxis.Direction);
+            Plane cameraLateralPlane2 = new Plane(cameraStart + Camera.Direction + Camera.LongitudinalAxis.Direction * 0.1f, cameraStart + Camera.LateralAxis.Direction + Camera.LongitudinalAxis.Direction * 0.1f, cameraStart - Camera.LateralAxis.Direction + Camera.LongitudinalAxis.Direction * 0.1f);
+            Plane cameraLongitudinalPlane = new Plane(cameraStart + Camera.Direction, cameraStart + Camera.LongitudinalAxis.Direction, cameraStart - Camera.LongitudinalAxis.Direction);
+            Plane cameraLongitudinalPlane2 = new Plane(cameraStart + Camera.Direction + Camera.LateralAxis.Direction * 0.1f, cameraStart + Camera.LongitudinalAxis.Direction + Camera.LateralAxis.Direction * 0.1f, cameraStart - Camera.LongitudinalAxis.Direction + Camera.LateralAxis.Direction * 0.1f);
+            Vector3 cameraIntersection = cameraPlane.GetIntersection(new Ray(position, -Camera.Direction));
             Vector3 cameraXIntersection = cameraLongitudinalPlane.GetIntersection(new Ray(cameraIntersection, Camera.LateralAxis.Direction));
             Vector3 cameraXIntersection2 = cameraLongitudinalPlane2.GetIntersection(new Ray(cameraIntersection, Camera.LateralAxis.Direction));
             Vector3 cameraYIntersection = cameraLateralPlane.GetIntersection(new Ray(cameraIntersection, Camera.LongitudinalAxis.Direction));
@@ -145,15 +145,15 @@ namespace _3DPixelArtEngine
             float cameraXDistance2 = Vector3.Distance(cameraXIntersection2, cameraIntersection);
             float cameraYDistance = Vector3.Distance(cameraYIntersection, cameraIntersection);
             float cameraYDistance2 = Vector3.Distance(cameraYIntersection2, cameraIntersection);
-            return new Vector2((cameraXDistance > cameraXDistance2 ? -1 : 1) * (cameraXDistance / cameraXLength) * _width, (cameraYDistance > cameraYDistance2 ? -1 : 1) * (cameraYDistance / cameraYLength) * _height);
+            return new Vector2((cameraXDistance > cameraXDistance2 ? -1 : 1) * (cameraXDistance / cameraXLength) * Width, (cameraYDistance > cameraYDistance2 ? -1 : 1) * (cameraYDistance / cameraYLength) * Height);
 
             /*
-            int xMax = (int)Math.Ceiling((float)_width / _pixelize);
-            int yMax = (int)Math.Ceiling((float)_height / _pixelize);
-            Vector3 cameraLeftBottom = Camera.Origin - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
-            Vector3 cameraRightBottom = cameraLeftBottom + (Camera.LateralAxis.Direction * (xMax - 1) * _cameraSize * _pixelize);
-            Vector3 cameraRightTop = cameraLeftBottom + (Camera.LongitudinalAxis.Direction * (yMax-1) * _cameraSize * _pixelize) + (Camera.LateralAxis.Direction * (xMax-1) * _cameraSize * _pixelize);
-            Vector3 cameraLeftTop = cameraLeftBottom + (Camera.LongitudinalAxis.Direction * (yMax - 1) * _cameraSize * _pixelize);
+            int xMax = (int)Math.Ceiling((float)Width / PixelRatio);
+            int yMax = (int)Math.Ceiling((float)Height / PixelRatio);
+            Vector3 cameraLeftBottom = Camera.Origin - (Camera.LongitudinalAxis.Direction * Height * CameraSize / 2f) - (Camera.LateralAxis.Direction * Width * CameraSize / 2f);
+            Vector3 cameraRightBottom = cameraLeftBottom + (Camera.LateralAxis.Direction * (xMax - 1) * CameraSize * PixelRatio);
+            Vector3 cameraRightTop = cameraLeftBottom + (Camera.LongitudinalAxis.Direction * (yMax-1) * CameraSize * PixelRatio) + (Camera.LateralAxis.Direction * (xMax-1) * CameraSize * PixelRatio);
+            Vector3 cameraLeftTop = cameraLeftBottom + (Camera.LongitudinalAxis.Direction * (yMax - 1) * CameraSize * PixelRatio);
             Ray positionRay = new Ray(Camera.Origin, Vector3.Normalize(position - Camera.Origin));
             //try reversing the order of the normals if doesn't work
             Triangle canvasLeftBottom = new Triangle(cameraLeftTop, cameraLeftBottom, cameraRightBottom);
@@ -168,16 +168,16 @@ namespace _3DPixelArtEngine
 
             float distanceX1 = Vector3.Distance(projectedPosition, cameraLeftBottom);
             float distanceX2 = Vector3.Distance(projectedPosition, cameraLeftTop);
-            float bX = (yMax - 1) * _cameraSize * _pixelize;
+            float bX = (yMax - 1) * CameraSize * PixelRatio;
             float sX = (distanceX1 + distanceX2 + bX) / 2f;
             float x = (2f * (float)Math.Sqrt(sX * (sX - distanceX1) * (sX - distanceX2) * (sX - bX))) / bX;
             float distanceY1 = Vector3.Distance(projectedPosition, cameraLeftBottom);
             float distanceY2 = Vector3.Distance(projectedPosition, cameraRightBottom);
-            float bY = (xMax - 1) * _cameraSize * _pixelize;
+            float bY = (xMax - 1) * CameraSize * PixelRatio;
             float sY = (distanceY1 + distanceY2 + bY) / 2f;
             float y = (2f * (float)Math.Sqrt(sY * (sY - distanceY1) * (sY - distanceY2) * (sY - bY))) / bY;
 
-                return new Vector2((x)/_cameraSize, (y) / _cameraSize);
+                return new Vector2((x)/CameraSize, (y) / CameraSize);
             */
         }
 
@@ -218,21 +218,21 @@ namespace _3DPixelArtEngine
         {
             Vector3 cameraStart;
             if (!perspective)
-                cameraStart = Camera.Origin - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
+                cameraStart = Camera.Origin - (Camera.LongitudinalAxis.Direction * Height * CameraSize / 2f) - (Camera.LateralAxis.Direction * Width * CameraSize / 2f);
             else
-                cameraStart = Camera.Origin + (Camera.Direction * (_width * _cameraSize / 2f) / (float)Math.Tan(fov * Math.PI / 360f)) - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
+                cameraStart = Camera.Origin + (Camera.Direction * (Width * CameraSize / 2f) / (float)Math.Tan(fov * Math.PI / 360f)) - (Camera.LongitudinalAxis.Direction * Height * CameraSize / 2f) - (Camera.LateralAxis.Direction * Width * CameraSize / 2f);
             
-            Vector3 cameraStartPerspective = Camera.Origin + (Camera.Direction * (_width * _cameraSize / 2f) / (float)Math.Tan(_perspectiveFOV * Math.PI / 360f)) - (Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f) - (Camera.LateralAxis.Direction * _width * _cameraSize / 2f);
-            int xMax = (int)Math.Ceiling((float)_width / _pixelize);
-            int yMax = (int)Math.Ceiling((float)_height / _pixelize);
+            Vector3 cameraStartPerspective = Camera.Origin + (Camera.Direction * (Width * CameraSize / 2f) / (float)Math.Tan(_perspectiveFOV * Math.PI / 360f)) - (Camera.LongitudinalAxis.Direction * Height * CameraSize / 2f) - (Camera.LateralAxis.Direction * Width * CameraSize / 2f);
+            int xMax = (int)Math.Ceiling((float)Width / PixelRatio);
+            int yMax = (int)Math.Ceiling((float)Height / PixelRatio);
 
-            Screen = new Color[(int)Math.Ceiling((float)_width / _pixelize) * (int)Math.Ceiling((float)_height / _pixelize)];
+            Screen = new Color[(int)Math.Ceiling((float)Width / PixelRatio) * (int)Math.Ceiling((float)Height / PixelRatio)];
 
             for (int y = 0; y < yMax; y++)
             {
                 for (int x = 0; x < xMax; x++)
                 {
-                    Vector3 cameraOrigin = cameraStart + (Camera.LongitudinalAxis.Direction * y * _cameraSize * _pixelize) + (Camera.LateralAxis.Direction * x * _cameraSize * _pixelize);
+                    Vector3 cameraOrigin = cameraStart + (Camera.LongitudinalAxis.Direction * y * CameraSize * PixelRatio) + (Camera.LateralAxis.Direction * x * CameraSize * PixelRatio);
                     Ray pixelRay;
                     if (!perspective)
                         pixelRay = new Ray(cameraOrigin, Camera.Direction);
@@ -258,7 +258,7 @@ namespace _3DPixelArtEngine
                                 float intensity = Scene[l].Light.GetIntensityAtDistance(Vector3.Distance(Scene[l].Position, triangle.Center));
                                 pixelColor = Color.Lerp(pixelColor, Scene[l].Light.Color, intensity * Vector3.Dot(triangle.GetReflection(pixelRay).Direction, triangle.Normal));
                             }
-                            spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X + (xMax - x - 1) * _pixelize, (int)offset.Y + (yMax - y - 1) * _pixelize, _pixelize, _pixelize), pixelColor);*/
+                            spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X + (xMax - x - 1) * PixelRatio, (int)offset.Y + (yMax - y - 1) * PixelRatio, PixelRatio, PixelRatio), pixelColor);*/
 
                         }
                     }
@@ -277,10 +277,18 @@ namespace _3DPixelArtEngine
         public void Draw(SpriteBatch spriteBatch, Vector2 offset = new Vector2())
         {
             _screen.SetData(Screen);
-            spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X, (int)offset.Y, _width, _height), new Color(40, 40, 40));
-            spriteBatch.Draw(_screen, new Rectangle((int)offset.X, (int)offset.Y, (int)Math.Ceiling((float)_width / _pixelize) * _pixelize, (int)Math.Ceiling((float)_height / _pixelize) * _pixelize), Color.White);
+            spriteBatch.Draw(_rectangle, new Rectangle((int)offset.X, (int)offset.Y, Width, Height), new Color(40, 40, 40));
+            spriteBatch.Draw(_screen, new Rectangle((int)offset.X, (int)offset.Y, (int)Math.Ceiling((float)Width / PixelRatio) * PixelRatio, (int)Math.Ceiling((float)Height / PixelRatio) * PixelRatio), Color.White);
 
 
+            Vector2 Screen1 = PositionToScreenOrthographic(Camera.Origin - Camera.LateralAxis.Direction * Width * CameraSize / 2f - Camera.LongitudinalAxis.Direction * Height * CameraSize / 2f);
+            Vector2 Screen2 = PositionToScreenOrthographic(Camera.Origin - Camera.LateralAxis.Direction * Width * CameraSize / 2f + Camera.LongitudinalAxis.Direction * Height * CameraSize / 2f);
+            Vector2 Screen3 = PositionToScreenOrthographic(Camera.Origin + Camera.LateralAxis.Direction * Width * CameraSize / 2f + Camera.LongitudinalAxis.Direction * Height * CameraSize / 2f);
+            Vector2 Screen4 = PositionToScreenOrthographic(Camera.Origin + Camera.LateralAxis.Direction * Width * CameraSize / 2f - Camera.LongitudinalAxis.Direction * Height * CameraSize / 2f);
+            DrawLine(spriteBatch, Screen1, Screen2, Color.Black, 2);
+            DrawLine(spriteBatch, Screen2, Screen3, Color.Black, 2);
+            DrawLine(spriteBatch, Screen3, Screen4, Color.Black, 2);
+            DrawLine(spriteBatch, Screen4, Screen1, Color.Black, 2);
 
             for (int i = 0; i < Scene.Count; i++)
             {
@@ -291,10 +299,6 @@ namespace _3DPixelArtEngine
                     Vector2 Point1 = PositionToScreenOrthographic(triangle.Point1);
                     Vector2 Point2 = PositionToScreenOrthographic(triangle.Point2);
                     Vector2 Point3 = PositionToScreenOrthographic(triangle.Point3);
-                    Vector2 Screen1 = PositionToScreenOrthographic(Camera.Origin - Camera.LateralAxis.Direction * _width * _cameraSize / 2f - Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f);
-                    Vector2 Screen2 = PositionToScreenOrthographic(Camera.Origin - Camera.LateralAxis.Direction * _width * _cameraSize / 2f + Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f);
-                    Vector2 Screen3 = PositionToScreenOrthographic(Camera.Origin + Camera.LateralAxis.Direction * _width * _cameraSize / 2f + Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f);
-                    Vector2 Screen4 = PositionToScreenOrthographic(Camera.Origin + Camera.LateralAxis.Direction * _width * _cameraSize / 2f - Camera.LongitudinalAxis.Direction * _height * _cameraSize / 2f);
                     DrawLine(spriteBatch, Point1, Point2, Color.Black, 2);
                     DrawLine(spriteBatch, Point2, Point3, Color.Black, 2);
                     DrawLine(spriteBatch, Point3, Point1, Color.Black, 2);
@@ -302,12 +306,10 @@ namespace _3DPixelArtEngine
                     DrawLine(spriteBatch, PositionToScreenOrthographic(triangle.Point1), PositionToScreenOrthographic(triangle.Point1 + triangle.Normal * 0.2f), Color.Black, 2);
                     DrawLine(spriteBatch, PositionToScreenOrthographic(triangle.Point2), PositionToScreenOrthographic(triangle.Point2 + triangle.Normal * 0.2f), Color.Black, 2);
                     DrawLine(spriteBatch, PositionToScreenOrthographic(triangle.Point3), PositionToScreenOrthographic(triangle.Point3 + triangle.Normal * 0.2f), Color.Black, 2);
-                    DrawLine(spriteBatch, Screen1, Screen2, Color.Black, 2);
-                    DrawLine(spriteBatch, Screen2, Screen3, Color.Black, 2);
-                    DrawLine(spriteBatch, Screen3, Screen4, Color.Black, 2);
-                    DrawLine(spriteBatch, Screen4, Screen1, Color.Black, 2);
                 }
             }
+
+            Debug.WriteLine(Vector3.Distance(Camera.Direction, new Vector3(1, 0, 0)) + " " + Vector3.Distance(Camera.LateralAxis.Direction, new Vector3(0, 0, 1)) + " " + Vector3.Distance(Camera.LongitudinalAxis.Direction, new Vector3(0, 1, 0)));
         }
 
         private void DrawLine(SpriteBatch spriteBatch, Vector2 begin, Vector2 end, Color color, int width = 1)

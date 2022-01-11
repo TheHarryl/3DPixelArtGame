@@ -138,6 +138,7 @@ namespace _3DPixelArtEngine
                     }
                 }
             }
+            TransformMesh();
         }
 
         public List<Triangle> GetTriangles()
