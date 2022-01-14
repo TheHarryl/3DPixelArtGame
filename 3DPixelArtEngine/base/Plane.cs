@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Text;
+﻿using System.Numerics;
 
 namespace _3DPixelArtEngine
 {
@@ -19,7 +16,7 @@ namespace _3DPixelArtEngine
                 _point1 = value;
                 Center = (_point1 + _point2 + _point3) / 3f;
                 Normal = Vector3.Cross(Point2 - Point1, Point3 - Point1);
-                
+
             }
         }
         public Vector3 Point2

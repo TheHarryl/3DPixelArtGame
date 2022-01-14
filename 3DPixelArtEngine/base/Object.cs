@@ -1,10 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Text;
-using Vector3 = System.Numerics.Vector3;
+﻿using Vector3 = System.Numerics.Vector3;
 
 namespace _3DPixelArtEngine
 {
@@ -12,10 +6,13 @@ namespace _3DPixelArtEngine
     {
         private Mesh _mesh;
         private PointLight _light;
+        private ParticleEmitter _particleEmitter;
 
-        public Mesh Mesh {
+        public Mesh Mesh
+        {
             get => _mesh;
-            set {
+            set
+            {
                 _mesh = value;
                 _mesh.Parent = this;
             }
@@ -27,6 +24,15 @@ namespace _3DPixelArtEngine
             {
                 _light = value;
                 _light.Parent = this;
+            }
+        }
+        public ParticleEmitter ParticleEmitter
+        {
+            get => _particleEmitter;
+            set
+            {
+                _particleEmitter = value;
+                _particleEmitter.Parent = this;
             }
         }
 
@@ -56,7 +62,7 @@ namespace _3DPixelArtEngine
 
         public Object()
         {
-            
+
         }
 
         public bool CollidesWith(Object target)

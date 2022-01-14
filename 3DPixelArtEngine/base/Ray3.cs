@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Text;
+﻿using System.Numerics;
 
 namespace _3DPixelArtEngine
 {
@@ -16,7 +13,7 @@ namespace _3DPixelArtEngine
             LongitudinalAxis = new Ray(new Vector3(), new Vector3(0f, 1f, 0f));
         }
 
-        public override void Rotate(Vector3 rotation) 
+        public override void Rotate(Vector3 rotation)
         {
             base.Rotate(rotation);
             LateralAxis.Rotate(rotation);

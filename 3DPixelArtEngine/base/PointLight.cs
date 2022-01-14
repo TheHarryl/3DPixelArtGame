@@ -1,18 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Text;
 using Vector3 = System.Numerics.Vector3;
 
 namespace _3DPixelArtEngine
 {
-    public class PointLight
+    public class PointLight : ObjectProperty
     {
-        public Object Parent;
         public Vector3 Offset;
         public Vector3 Rotation;
-        public bool Enabled;
 
         public Color Color;
         public float Intensity;
@@ -34,7 +29,6 @@ namespace _3DPixelArtEngine
             LightSpread = lightSpread;
 
             Orientation = new Ray(Vector3.Zero, new Vector3(1f, 0f, 0f));
-            Enabled = true;
         }
 
         public float GetIntensityAtDistance(float distance)

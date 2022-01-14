@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Text;
+﻿using System.Numerics;
 
 namespace _3DPixelArtEngine
 {
@@ -10,7 +7,7 @@ namespace _3DPixelArtEngine
         public float Length;
         public Vector3 Displacement
         {
-            get => Direction * Length; 
+            get => Direction * Length;
         }
 
         public Vector(Vector3 origin, Vector3 rotation, float length) : base(origin, rotation)

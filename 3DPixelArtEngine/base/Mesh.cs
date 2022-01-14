@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using System.Text;
 
 namespace _3DPixelArtEngine
 {
-    public class Mesh
+    public class Mesh : ObjectProperty
     {
-        public Object Parent;
         private List<Triangle> _triangles;
         private List<Triangle> _transformedTriangles;
         private Vector3 _offset;

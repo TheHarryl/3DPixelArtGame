@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Numerics;
-using System.Text;
 
 namespace _3DPixelArtEngine
 {
@@ -22,7 +20,7 @@ namespace _3DPixelArtEngine
                 triangle.Contains(Point2, Point3) ||
                 triangle.Contains(Point3, Point1);
         }
-        
+
         public bool Contains(Vector3 point)
         {
             float Point1Weight = ((point.X * Point2.Y) - (point.Y * Point2.X) + ((((Point3.Y * Point2.X) - (Point3.X * Point2.Y)) * ((point.Z * Point2.Y) - (point.Y * Point2.Z) - (Point1.Z * Point2.Y))) / ((Point2.Y * Point3.Z) - (Point3.Y * Point2.Z)))) / (1 - ((((Point3.Y * Point2.X) - (Point3.X * Point2.Y)) * (Point1.Y * Point2.Z)) / ((Point2.Y * Point3.Z) - (Point3.Y * Point2.Z))));
